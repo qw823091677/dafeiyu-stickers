@@ -1,5 +1,7 @@
 # dafeiyu-stickers（蓝色大肥鱼表情库工具）
 
+[![test](https://github.com/qw823091677/dafeiyu-stickers/actions/workflows/test.yml/badge.svg)](https://github.com/qw823091677/dafeiyu-stickers/actions/workflows/test.yml)
+
 把 [蓝色大肥鱼档案馆](https://fisharchive.cc/)（鲸鱼娘 DeepSeek 非官方同人表情站）的表情包**原图**同步到本地，
 建立带标签/注释/哈希的索引，并提供 **CLI** 与 **MCP 工具**，让 QQ 机器人（qq-bridge / DSH）在聊天时能按情绪、场景直接检索和发送。
 

@@ -275,6 +275,12 @@ function updateImageRoots(options) {
         return true;
       }
     });
+    // 原本没有 imageSend、卸载后也没有其他字段时，把空壳一起收掉，避免留下无用配置。
+    if (config.socialV2.imageSend.roots.length === 0) {
+      delete config.socialV2.imageSend.roots;
+      if (Object.keys(config.socialV2.imageSend).length === 0) delete config.socialV2.imageSend;
+      if (Object.keys(config.socialV2).length === 0) delete config.socialV2;
+    }
   } else {
     if (exists) {
       log('  已包含图片目录，无需修改');

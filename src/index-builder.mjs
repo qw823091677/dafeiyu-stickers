@@ -1,7 +1,6 @@
 // 构建本地索引：把站内清单（alt/tags/尺寸）+ 本地文件校验结果（sha256/字节数/真实格式）
 // 合并成一份可直接检索、也适合入库审阅的 index.json。
 
-import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { readImageMeta } from './image-meta.mjs';
