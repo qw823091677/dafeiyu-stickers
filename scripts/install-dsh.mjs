@@ -16,9 +16,9 @@ import { REPO_ROOT, DATA_DIR, IMAGES_DIR } from '../src/paths.mjs';
 const MCP_START = '# === dafeiyu-stickers MCP BEGIN ===';
 const MCP_END = '# === dafeiyu-stickers MCP END ===';
 const PROMPT_MARK = '【本地表情库】';
-const PROMPT_LINE =
-  '                【本地表情库】 想发表情、接梗、卖萌、吐槽但 QQ 收藏里没有合适的，先用 mcp__dafeiyu-stickers__sticker_search（tags/关键词，如 开心、工作、睡觉、无语、卖萌）或 mcp__dafeiyu-stickers__sticker_random 找；返回的 path 原样传给 mcp__snowluma__qq_send_image 的 images 数组（一次 1~3 张，别刷屏）。素材来自蓝色大肥鱼档案馆，CC BY-NC-SA 4.0，禁止商用；正式/敏感话题别硬塞。';
-const PROMPT_ANCHOR = '                【操作即动作，不是 API】';
+const PROMPT_TEXT =
+  '【本地表情库】 想发表情、接梗、卖萌、吐槽但 QQ 收藏里没有合适的，先用 mcp__dafeiyu-stickers__sticker_search（tags/关键词，如 开心、工作、睡觉、无语、卖萌）或 mcp__dafeiyu-stickers__sticker_random 找；返回的 path 原样传给 mcp__snowluma__qq_send_image 的 images 数组（一次 1~3 张，别刷屏）。素材来自蓝色大肥鱼档案馆，CC BY-NC-SA 4.0，禁止商用；正式/敏感话题别硬塞。';
+const PROMPT_ANCHOR = '【操作即动作，不是 API】';
 
 function parseArgs(argv) {
   const options = {
@@ -294,12 +294,13 @@ function updateImageRoots(options) {
   log('  ⚠️ 该配置在 qq-bridge 启动时读取，需要重启桥接后生效');
 }
 
-function updatePromptFile(file, options, label) {
+function updatePromptFile(file, options, label, indent = 16) {
   log(`  ${label}：${file}`);
   if (!fs.existsSync(file)) {
     log('  文件不存在，跳过');
     return;
   }
+  const promptLine = `${' '.repeat(indent)}${PROMPT_TEXT}`;
   const original = readText(file);
   const lines = original.split('\n');
   const existingIndex = lines.findIndex((line) => line.includes(PROMPT_MARK) && line.includes('mcp__dafeiyu-stickers__'));
@@ -311,18 +312,18 @@ function updatePromptFile(file, options, label) {
     lines.splice(existingIndex, 1);
   } else {
     if (existingIndex >= 0) {
-      if (lines[existingIndex] === PROMPT_LINE) {
+      if (lines[existingIndex] === promptLine) {
         log('  已存在且内容一致，无需修改');
         return;
       }
-      lines[existingIndex] = PROMPT_LINE;
+      lines[existingIndex] = promptLine;
     } else {
       const anchorIndex = lines.findIndex((line) => line.includes(PROMPT_ANCHOR));
       if (anchorIndex < 0) {
-        log(`  ⚠️ 找不到锚点「${PROMPT_ANCHOR.trim()}」，跳过（需手动把提示加进 preset）`);
+        log(`  ⚠️ 找不到锚点「${PROMPT_ANCHOR}」，跳过（需手动把提示加进 preset）`);
         return;
       }
-      lines.splice(anchorIndex, 0, PROMPT_LINE);
+      lines.splice(anchorIndex, 0, promptLine);
     }
   }
   writeTextAtomic(file, lines.join('\n'), options);
@@ -333,10 +334,24 @@ function updatePrompts(options) {
   log('\n[4/4] qq-chat-v2 提示词');
   const targets = [];
   if (options.repoPreset) {
-    targets.push([path.join(options.bridge, 'plugins', 'qq-agent-presets', 'presets', 'qq-chat-v2.patch.yml'), '仓库副本']);
+    // patch 是生成物；源文件是 agent.cordis.yml（重新生成后仍能保留提示）。
+    targets.push([
+      path.join(options.bridge, 'dsh', 'agent-presets', 'qq-chat-v2', 'agent.cordis.yml'),
+      '仓库源文件',
+      6
+    ]);
+    targets.push([
+      path.join(options.bridge, 'plugins', 'qq-agent-presets', 'presets', 'qq-chat-v2.patch.yml'),
+      '仓库 patch 副本',
+      16
+    ]);
   }
-  targets.push([path.join(options.dshHome, 'plugins', 'qq-agent-presets', 'presets', 'qq-chat-v2.patch.yml'), 'DSH 安装副本']);
-  for (const [file, label] of targets) updatePromptFile(file, options, label);
+  targets.push([
+    path.join(options.dshHome, 'plugins', 'qq-agent-presets', 'presets', 'qq-chat-v2.patch.yml'),
+    'DSH 安装副本',
+    16
+  ]);
+  for (const [file, label, indent] of targets) updatePromptFile(file, options, label, indent);
 }
 
 function checkServer(options) {
