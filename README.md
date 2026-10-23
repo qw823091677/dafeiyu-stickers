@@ -245,6 +245,6 @@ node --test test/*.test.mjs   # 15 项：图片头解析 / 检索 / 随机 / MCP
 
 ## License
 
-- **代码**（`src/`、`scripts/`、`test/`）：[MIT](LICENSE)
+- **代码**（`src/`、`scripts/`、`test/`）：[MIT](LICENSE)。MIT 只覆盖代码，**不覆盖**任何表情图片。
 - **索引整理与注释编排**：CC BY-NC-SA 4.0
 - **图片与角色形象**：归原作者所有，依 CC BY-NC-SA 4.0 使用，**禁止商用**
