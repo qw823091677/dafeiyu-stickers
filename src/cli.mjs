@@ -111,7 +111,8 @@ async function cmdSync(values) {
 }
 
 async function cmdVerify(values) {
-  await syncAll({ verify: true, log });
+  // 逐张进度在这里没有意义：下面会统一汇总缺失/不符，失败项才值得打印。
+  await syncAll({ verify: true, log: () => {} });
   let index;
   try {
     index = JSON.parse(fs.readFileSync(INDEX_FILE, 'utf8'));
