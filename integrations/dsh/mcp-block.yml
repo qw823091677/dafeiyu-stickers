@@ -1,0 +1,19 @@
+# dafeiyu-stickers MCP 注册片段
+#
+# 用法：把下面整段追加到 $DSH_HOME/profiles/<profile>/cordis.patch.yml。
+# 把 command / args 换成目标机器上的真实路径（Windows 路径用单引号包住即可）。
+# 注册后工具前缀为 mcp__dafeiyu-stickers__ ，还需要在 qq-tool-restrict.mjs 的
+# SAFE_PREFIXES 里放行该前缀，否则调用会被安全白名单拒绝。
+
+# === dafeiyu-stickers MCP BEGIN ===
+- insert:
+    - id: mcp-dafeiyu-stickers
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: dafeiyu-stickers
+        transport: stdio
+        command: 'E:\node\node.exe'
+        args:
+          - 'D:\path\to\dafeiyu-stickers\src\mcp-server.mjs'
+        toolCallTimeoutMs: 60000
+# === dafeiyu-stickers MCP END ===

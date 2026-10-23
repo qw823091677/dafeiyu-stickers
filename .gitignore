@@ -1,0 +1,21 @@
+# 依赖
+node_modules/
+
+# 下载的原图（默认不入库：体积大且版权归原作者；用 `npm run sync` 在本机重建）
+data/images/
+# 运行时状态（随下载时间 / ETag 变化，不入库避免无意义 diff）
+data/sync-state.json
+data/usage.json
+
+# 安装脚本生成的备份与临时文件
+*.bak-*
+*.tmp
+.install-*.json
+
+# 日志与系统文件
+*.log
+.DS_Store
+Thumbs.db
+
+# 本地工作区约定，不属于开源内容
+AGENTS.md

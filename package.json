@@ -1,0 +1,54 @@
+{
+  "name": "dafeiyu-stickers",
+  "version": "0.1.0",
+  "description": "蓝色大肥鱼档案馆（fisharchive.cc）表情包本地化工具：原图同步、可检索索引、CLI 与 MCP 工具，方便 QQ / DSH bot 直接调用",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "dafeiyu-stickers": "src/cli.mjs"
+  },
+  "engines": {
+    "node": ">=18.17"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qw823091677/dafeiyu-stickers.git"
+  },
+  "homepage": "https://github.com/qw823091677/dafeiyu-stickers#readme",
+  "bugs": {
+    "url": "https://github.com/qw823091677/dafeiyu-stickers/issues"
+  },
+  "files": [
+    "src/",
+    "data/index.json",
+    "data/manifest.source.json",
+    "data/tags.json",
+    "README.md",
+    "LICENSE",
+    "CREDITS.md"
+  ],
+  "scripts": {
+    "sync": "node src/cli.mjs sync",
+    "verify": "node src/cli.mjs verify",
+    "build-index": "node src/cli.mjs build-index",
+    "search": "node src/cli.mjs search",
+    "random": "node src/cli.mjs random",
+    "tags": "node src/cli.mjs tags",
+    "credits": "node src/cli.mjs credits",
+    "stats": "node src/cli.mjs stats",
+    "docs": "node scripts/build-docs.mjs",
+    "mcp": "node src/mcp-server.mjs",
+    "install:dsh": "node scripts/install-dsh.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "keywords": [
+    "deepseek",
+    "whale",
+    "sticker",
+    "emoji",
+    "mcp",
+    "qq-bridge",
+    "dsh",
+    "fisharchive"
+  ]
+}
