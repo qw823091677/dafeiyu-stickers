@@ -8,7 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { IMAGES_DIR, INDEX_FILE, TAGS_FILE } from './paths.mjs';
-import { loadTagCatalog } from './index-builder.mjs';
+import { groupOfTag, loadTagCatalog } from './index-builder.mjs';
 
 const PUNCT = /[\s\u3000，。！？!?、：:；;'"“”‘’（）()\[\]【】<>《》{}~～`|\\/+\-—–_=*#@&%$^·….,]/g;
 
@@ -70,7 +70,7 @@ export function loadLibrary(options = {}) {
   }));
   const tagMeta = new Map((index.tags || []).map((item) => [item.name, item]));
   for (const name of tagNames) {
-    if (!tagMeta.has(name)) tagMeta.set(name, { name, count: 0, group: '' });
+    if (!tagMeta.has(name)) tagMeta.set(name, { name, count: 0, group: groupOfTag(catalog, name) });
   }
   return {
     index,
