@@ -208,6 +208,7 @@ function withPath(library, entry) {
     path: filePath,
     available,
     caption: entry.caption,
+    note: entry.note || '',
     tags: entry.tags,
     groups: entry.groups,
     width: entry.width,
