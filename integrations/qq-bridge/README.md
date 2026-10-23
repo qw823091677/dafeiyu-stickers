@@ -32,6 +32,10 @@
 
 `serverName` 决定工具前缀：`dafeiyu-stickers` → `mcp__dafeiyu-stickers__*`。
 
+> **注意 profile 选对**：DSH 桌面版加载的是 `$DSH_HOME/profiles/desktop`，`dsh web` 才是
+> `$DSH_HOME/profiles/web`。只改了一个 profile 时，MCP 进程根本不会启动，表现是"配置明明写了，
+> 工具列表里却没有"。`install-dsh.mjs` 默认两个都写。
+
 ## 2. 放行工具前缀
 
 `qq-tool-restrict.mjs` 的执行期白名单只允许 `mcp__snowluma__` / `mcp__snowluma-host__` / `mcp__web-search-safe__`。

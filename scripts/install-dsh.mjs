@@ -23,7 +23,7 @@ const PROMPT_ANCHOR = '【操作即动作，不是 API】';
 function parseArgs(argv) {
   const options = {
     dshHome: process.env.DSH_HOME || path.join(os.homedir(), '.dsh'),
-    profile: 'web',
+    profile: 'auto',
     bridge: process.env.QQ_BRIDGE || path.resolve(REPO_ROOT, '..', 'qq-bridge'),
     imagesRoot: IMAGES_DIR,
     serverName: 'dafeiyu-stickers',
@@ -87,7 +87,8 @@ function printHelp() {
   console.log(`用法：node scripts/install-dsh.mjs [选项]
 
   --dsh-home <dir>    DSH 数据目录（默认 $DSH_HOME 或 ~/.dsh）
-  --profile <name>    DSH profile（默认 web）
+  --profile <name>    只安装到指定 profile；默认写入所有已存在的 profile
+                      （DSH 桌面版用 desktop、dsh web 用 web，两个都写最稳）
   --bridge <dir>      qq-bridge 目录（默认仓库同级的 ../qq-bridge）
   --images-root <dir> 表情图片目录（默认本仓库 data/images）
   --server-name <n>   MCP server 名（默认 dafeiyu-stickers → 工具前缀 mcp__dafeiyu-stickers__）
@@ -102,6 +103,26 @@ function printHelp() {
 
 function log(message) {
   process.stdout.write(`${message}\n`);
+}
+
+/**
+ * 解析要写入的 profile。
+ *
+ * DSH 桌面版和 `dsh web` 用的是不同 profile 目录（desktop / web），同一个 3080 端口
+ * 可能来自任意一个。只写一个很容易出现「配置看起来对、MCP 却根本没启动」，
+ * 所以默认把所有带 cordis.patch.yml 的 profile 都写上；用 --profile 可收窄。
+ */
+function resolveProfiles(options) {
+  if (options.profile && options.profile !== 'auto') return [options.profile];
+  const root = path.join(options.dshHome, 'profiles');
+  if (!fs.existsSync(root)) return ['web'];
+  const profiles = fs
+    .readdirSync(root, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .filter((name) => fs.existsSync(path.join(root, name, 'cordis.patch.yml')))
+    .sort();
+  return profiles.length ? profiles : ['web'];
 }
 
 function backupOnce(file) {
@@ -150,10 +171,14 @@ function mcpBlock(options) {
   ].join('\n');
 }
 
-function updateCordis(options) {
-  const file = path.join(options.dshHome, 'profiles', options.profile, 'cordis.patch.yml');
-  log(`\n[1/4] DSH MCP 注册：${file}`);
+function updateCordis(options, profileName) {
+  const file = path.join(options.dshHome, 'profiles', profileName, 'cordis.patch.yml');
+  log(`\n[1/4] DSH MCP 注册（profile: ${profileName}）：${file}`);
   if (!fs.existsSync(file)) {
+    if (options.uninstall) {
+      log('  文件不存在，跳过');
+      return;
+    }
     if (options.dryRun) {
       log('  [dry-run] 文件不存在，将创建');
     } else {
@@ -366,9 +391,10 @@ function checkServer(options) {
 
 function main() {
   const options = parseArgs(process.argv.slice(2));
+  const profiles = resolveProfiles(options);
   log(`dafeiyu-stickers 安装器${options.dryRun ? '（dry-run）' : ''}${options.uninstall ? '（卸载）' : ''}`);
   log(`  DSH_HOME：${options.dshHome}`);
-  log(`  profile：${options.profile}`);
+  log(`  profile：${profiles.join(', ')}`);
   log(`  qq-bridge：${options.bridge}`);
   log(`  图片目录：${path.resolve(options.imagesRoot)}`);
 
@@ -379,7 +405,7 @@ function main() {
     throw new Error(`${options.bridge} 下没有 config.json，确认这是 qq-bridge 仓库根目录`);
   }
 
-  updateCordis(options);
+  for (const profile of profiles) updateCordis(options, profile);
   if (options.guard) updateGuards(options);
   if (options.imageRoots) updateImageRoots(options);
   if (options.prompt) updatePrompts(options);

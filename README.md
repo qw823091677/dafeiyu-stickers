@@ -137,19 +137,20 @@ node scripts/install-dsh.mjs
 
 脚本会做四件事（全部幂等，首次修改前备份为 `*.bak-dafeiyu`）：
 
-1. `$DSH_HOME/profiles/web/cordis.patch.yml`：注册 MCP server `dafeiyu-stickers`；
+1. `$DSH_HOME/profiles/*/cordis.patch.yml`：注册 MCP server `dafeiyu-stickers`（默认写入所有 profile：桌面版是 `desktop`，`dsh web` 是 `web`）；
 2. `qq-tool-restrict.mjs`（仓库副本 + DSH 安装副本）：放行 `mcp__dafeiyu-stickers__` 前缀，否则工具会被 QQ 安全白名单拒绝；
 3. `qq-bridge/config.json`：把 `data/images` 加进 `socialV2.imageSend.roots`，否则 `qq_send_image` 会拒绝发送本目录的图；
 4. `qq-chat-v2` preset：加一行"本地表情库"用法，让模型知道先检索再发图。
 
-改完需要**重启 DSH 和 qq-bridge**（两处配置都是启动时读取）。撤销：
+改完需要**重启 DSH 和 qq-bridge**（两处配置都是启动时读取；DSH 有时会热加载 profile patch，但重启最稳）。撤销：
 
 ```bash
 node scripts/install-dsh.mjs --uninstall
 ```
 
 如果你不用自动脚本，参考 [integrations/qq-bridge/README.md](integrations/qq-bridge/README.md) 手动配置。
-不同版本的 qq-bridge / DSH 路径可能不同，用 `--dsh-home`、`--profile`、`--bridge`、`--images-root` 覆盖。
+默认会写入**所有已存在的 DSH profile**（`desktop` 和 `web`）：DSH 桌面版实际加载的是 `desktop`，
+只写 `web` 会出现「配置看起来对、MCP 却根本没启动」。用 `--dsh-home`、`--profile`、`--bridge`、`--images-root` 可覆盖。
 
 > 图片目录被移走或换机器后，`qq_send_image` 会报"路径不在允许的目录内"：
 > 重新运行安装脚本并重启桥接即可。
