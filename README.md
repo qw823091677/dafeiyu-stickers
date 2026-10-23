@@ -173,7 +173,7 @@ node scripts/install-dsh.mjs
 1. `$DSH_HOME/profiles/*/cordis.patch.yml`：注册 MCP server `dafeiyu-stickers`（默认写入所有 profile：桌面版是 `desktop`，`dsh web` 是 `web`）；
 2. `qq-tool-restrict.mjs`（仓库副本 + DSH 安装副本）：放行 `mcp__dafeiyu-stickers__` 前缀，否则工具会被 QQ 安全白名单拒绝；
 3. `qq-bridge/config.json`：把 `data/images` 与 `collection/images` 加进 `socialV2.imageSend.roots`，否则 `qq_send_image` 会拒绝发送这两个目录的图；
-4. `qq-chat-v2` preset：加一行"本地表情库"用法，让模型知道先检索再发图。
+4. `qq-chat-v2` preset：加两行"本地表情库 / 收藏表情"用法，让模型知道先检索再发图、看到值得留的图再收藏。
 
 改完需要**重启 DSH 和 qq-bridge**（两处配置都是启动时读取；DSH 有时会热加载 profile patch，但重启最稳）。撤销：
 
