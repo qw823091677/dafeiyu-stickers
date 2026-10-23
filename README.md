@@ -8,8 +8,8 @@
 另外提供一个**独立的本地收藏库**：bot 在 QQ 群聊/私聊里看到值得留的图，可以收进 `collection/`（与档案馆索引分开），
 自己写注释、打标签，之后按同样方式检索发送。
 
-- 数据来源：[fisharchive.cc](https://fisharchive.cc/) · 站内清单 `https://fisharchive.cc/stickers/index.json`
-- 当前数据版本：271 张 / 31 个标签 / 约 247 MB（原图，不转码、不压缩、不加水印）
+- 数据来源：[fisharchive.cc](https://fisharchive.cc/) · 站内清单 `https://fisharchive.cc/stickers/index.json` · 上游仓库 [EDMOK/blue-fish-archive](https://github.com/EDMOK/blue-fish-archive)
+- 当前数据版本：271 张 / 31 个标签 / 站长自作 5 张 / 约 247 MB（原图，不转码、不压缩、不加水印）
 - 代码许可：MIT ｜ 图片与角色：**CC BY-NC-SA 4.0（禁止商用）**，详见 [CREDITS.md](CREDITS.md)
 
 > 这不是官方项目，也不代表 DeepSeek 或档案馆立场。图片版权归原作者所有，本项目只做本地化整理与检索工具。
@@ -197,7 +197,7 @@ node scripts/install-dsh.mjs --uninstall
   "schemaVersion": 1,
   "source": { "site": "https://fisharchive.cc", "manifestSha256": "…" },
   "license": { "name": "CC BY-NC-SA 4.0", "url": "…" },
-  "stats": { "count": 271, "tags": 31, "animated": 4, "totalBytes": 258992342, "dataVersion": "e78238e601c0" },
+  "stats": { "count": 271, "tags": 31, "animated": 4, "selfMade": 5, "totalBytes": 258992342, "dataVersion": "e78238e601c0" },
   "tags": [{ "name": "搞笑", "count": 87, "group": "社交" }],
   "stickers": [
     {
@@ -206,6 +206,7 @@ node scripts/install-dsh.mjs --uninstall
       "caption": "deepseek娘趴平冒着Z字，深度思考这次真睡到断线。", // 站内 alt，原样保留
       "tags": ["卖萌", "睡觉"],
       "groups": ["社交", "日常"],
+      "selfMade": false,                    // 站内 selfMade：站长自作（EDMOK）
       "width": 512, "height": 512,          // 原图真实尺寸（用图片头解析）
       "archiveSize": { "width": 480, "height": 480 }, // 站点展示尺寸
       "mime": "image/webp", "bytes": 39724, "animated": false,
@@ -217,6 +218,7 @@ node scripts/install-dsh.mjs --uninstall
 ```
 
 - 注释来自档案馆的 `alt` 与 `tags`，本项目**不重写、不翻译、不擅自加戏**；
+- `selfMade` 是上游 `index.json` 的字段，标记站长自作（当前 5 张），CLI / MCP 输出会显示「站长自作」；
 - `data/tags.json` 是人工维护的标签组与口语同义词（可自行扩充）；
 - 站点的 `width/height` 是预览尺寸，原图通常更大，所以额外记录 `archiveSize`；
 - `data/manifest.source.json` 是站内清单原始快照，`data/images/` 默认不入库（见 `.gitignore`）。
@@ -255,9 +257,10 @@ dafeiyu-stickers/
 
 ## 版权与署名（重要）
 
-- 角色形象原作：**上善无形**（[Bilibili](https://space.bilibili.com/291892724)）
+- 角色形象原作：**上善无形**（[Bilibili](https://space.bilibili.com/4456176)）
 - DeepSeek 元素女仆鲸鱼娘二次设计：**ZipZipPipe**（[Bilibili](https://space.bilibili.com/4168597)），依 CC BY-NC-SA 4.0 授权
-- 档案馆整理与网站：**EDMOK**（[Bilibili](https://space.bilibili.com/4456176) / [GitHub](https://github.com/EDMOK/blue-fish-archive)）
+- 档案馆整理与网站：**EDMOK**（[Bilibili](https://space.bilibili.com/291892724) / [GitHub](https://github.com/EDMOK/blue-fish-archive)）
+- 索引里 `selfMade: true` 的 5 张为**站长自作**（EDMOK），CLI/MCP 输出会标注。
 - 单张表情的相关权利归各自创作者；本项目**不主张**图片版权。
 - 本地收藏库里的图片来自 QQ 聊天，版权仍归原作者；如果图主不希望被保存/传播，用 `forget <local-id>` 删除对应条目。
 
@@ -275,6 +278,7 @@ dafeiyu-stickers/
 
 ```bash
 node --test test/*.test.mjs   # 21 项：图片头解析 / 检索 / 收藏库 / MCP 协议
+npm run check:index           # 校验索引与站内快照一致（CI 也会跑）
 ```
 
 - 新增标签组或同义词：改 `data/tags.json`，跑 `npm run build-index`（索引里的 `group` 会更新）；

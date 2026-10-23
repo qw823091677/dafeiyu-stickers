@@ -33,6 +33,7 @@ node scripts/install-dsh.mjs
 
 - Code: **MIT** ([LICENSE](LICENSE))
 - Images and character designs: **CC BY-NC-SA 4.0**, all rights belong to their creators — **no commercial use**, attribution and share-alike required. See [CREDITS.md](CREDITS.md).
+- `selfMade: true` marks the 5 images drawn by the archive author (EDMOK); CLI and MCP output label them as 站长自作.
 - This is an unofficial fan project, not affiliated with DeepSeek or the archive.
 
-Original character: 上善无形 · Whale-girl redesign: ZipZipPipe · Archive: EDMOK.
+Original character: 上善无形 ([Bilibili](https://space.bilibili.com/4456176)) · Whale-girl redesign: ZipZipPipe ([Bilibili](https://space.bilibili.com/4168597)) · Archive: EDMOK ([Bilibili](https://space.bilibili.com/291892724)).

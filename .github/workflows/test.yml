@@ -18,5 +18,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Show Node version
         run: node --version
+      - name: Check index consistency
+        run: node scripts/check-index.mjs
       - name: Run unit + MCP protocol tests
         run: node --test test/*.test.mjs

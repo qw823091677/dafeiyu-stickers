@@ -1,6 +1,6 @@
 # 表情总览
 
-共 **271** 张 · 31 个标签 · 动图 4 张 · 约 247.0 MB（原图）。
+共 **271** 张 · 31 个标签 · 动图 4 张 · 站长自作 5 张 · 约 247.0 MB（原图）。
 
 数据版本 `e78238e601c0` ｜ 许可 **CC BY-NC-SA 4.0**（禁止商用，转载须署名）。
 
@@ -81,7 +81,7 @@
 | `deepseek-duan-zuo` | 鲸鱼娘端坐在鲸尾上脸红微笑，摸鱼也得摆出满分坐姿 | 害羞 / 卖萌 | 1500×2666 | [原始出处](https://fisharchive.cc/media/deepseek-duan-zuo.png) |
 | `deepseek-duankongpan` | 大肥鱼眯眼端着空木盘：需求已接收，内容全靠脑补 | 得意 / 工作 | 966×1308 | [原始出处](https://fisharchive.cc/media/deepseek-duankongpan.jpeg) |
 | `deepseek-duanpenqiutoken` | 大肥鱼抱着一盆白米饭委屈巴巴：Token耗尽，只能在线讨饭啦 | 委屈 / 吃饭 | 648×648 | [原始出处](https://fisharchive.cc/media/deepseek-duanpenqiutoken.png) |
-| `deepseek-dui-zhe-diannao-tu-she` | 鲸鱼娘盯着电脑吐舌傻乐，摸鱼进度条悄悄加载中 | 开心 / 卖萌 / 摸鱼 | 1254×1254 | [原始出处](https://fisharchive.cc/media/deepseek-dui-zhe-diannao-tu-she.png) |
+| `deepseek-dui-zhe-diannao-tu-she` | **（站长自作）** 鲸鱼娘盯着电脑吐舌傻乐，摸鱼进度条悄悄加载中 | 开心 / 卖萌 / 摸鱼 | 1254×1254 | [原始出处](https://fisharchive.cc/media/deepseek-dui-zhe-diannao-tu-she.png) |
 | `deepseek-duo-zai-zhuzi-pang` | deepseek娘攥拳躲在柱边冒冷汗，用户怒火一烧她先破防了 | 生气 / 震惊 | 960×960 | [原始出处](https://fisharchive.cc/media/deepseek-duo-zai-zhuzi-pang.jpg) |
 | `deepseek-duzuo-fadai` | 鲸鱼娘抱着小手端坐，深度思考把表情算没了 | 无语 / 卖萌 | 478×647 | [原始出处](https://fisharchive.cc/media/deepseek-duzuo-fadai.png) |
 | `deepseek-fangdajing-panwen` | 蓝色大肥鱼举着放大镜眨眼：开源圈谁是老大？ | 疑惑 / 搞笑 | 512×512 | [原始出处](https://fisharchive.cc/media/deepseek-fangdajing-panwen.webp) |
@@ -115,7 +115,7 @@
 | `deepseek-jujue-kan-yinsi` | 蓝色大肥鱼盯着DSH内测版压缩包举手严肃脸：用户隐私，别拿来跑分。 | 拒绝 / 工作 | 960×715 | [原始出处](https://fisharchive.cc/media/deepseek-jujue-kan-yinsi.jpg) |
 | `deepseek-jupai-yugao` | deepseek娘举牌指着本月预告，催更党已经把刷新键按出火星子 | 卖萌 / 工作 | 512×512 | [原始出处](https://fisharchive.cc/media/deepseek-jupai-yugao.webp) |
 | `deepseek-juqijingyu-baozhen` | 蓝色大肥鱼举起鲸鱼抱枕张嘴卖萌：聪明额度正在深度思考 | 搞笑 / 卖萌 | 512×512 | [原始出处](https://fisharchive.cc/media/deepseek-juqijingyu-baozhen.webp) |
-| `deepseek-jushou-dazhaohu` | 蓝色大肥鱼举手笑着报到：这下谁还敢说我潜水 | 卖萌 / 打招呼 | 1254×1254 | [原始出处](https://fisharchive.cc/media/deepseek-jushou-dazhaohu.png) |
+| `deepseek-jushou-dazhaohu` | **（站长自作）** 蓝色大肥鱼举手笑着报到：这下谁还敢说我潜水 | 卖萌 / 打招呼 | 1254×1254 | [原始出处](https://fisharchive.cc/media/deepseek-jushou-dazhaohu.png) |
 | `deepseek-jushou-jiayou` | 大肥鱼举拳露出笑脸，鲸鱼尾一翘：今日算力直接拉满！ | 开心 / 加油 | 800×1200 | [原始出处](https://fisharchive.cc/media/deepseek-jushou-jiayou.jpg) |
 | `deepseek-juzhe-laba-ku` | 大肥鱼举着绿色喇叭嚎啕大哭，算力不足直接破防 | 搞笑 / 难过 | 960×960 | [原始出处](https://fisharchive.cc/media/deepseek-juzhe-laba-ku.jpg) |
 | `deepseek-kan-dian-nao-fan-wen` | deepseek娘盯着电脑和满屏问号，这用户需求把 CPU 问冒烟了 | 疑惑 / 工作 | 960×960 | [原始出处](https://fisharchive.cc/media/deepseek-kan-dian-nao-fan-wen.jpg) |
@@ -135,7 +135,7 @@
 | `deepseek-lan-jing-pai-ziji-pin` | 鲸鱼娘的蓝鲸牌配着满盒零件，原来开源还得自己拼。 | 疑惑 / 购物 | 648×447 | [原始出处](https://fisharchive.cc/media/deepseek-lan-jing-pai-ziji-pin.png) |
 | `deepseek-lanse-dafeiyu` | 鲸鱼娘摊手泪汪汪：怎么一开口就把本鱼 CPU 干冒烟了？ | 疑惑 / 委屈 | 648×648 | [原始出处](https://fisharchive.cc/media/deepseek-lanse-dafeiyu.png) |
 | `deepseek-lenghan-wuyu` | deepseek娘顶着冷汗半睁眼：这需求把我CPU干沉默了 | 无语 / 工作 | 960×960 | [原始出处](https://fisharchive.cc/media/deepseek-lenghan-wuyu.jpg) |
-| `deepseek-liezui-xiao` | 大肥鱼顶着鲸鱼鳍耳饰咧嘴笑，今日份卖萌算力拉满 | 开心 / 卖萌 | 1103×1426 | [原始出处](https://fisharchive.cc/media/deepseek-liezui-xiao.png) |
+| `deepseek-liezui-xiao` | **（站长自作）** 大肥鱼顶着鲸鱼鳍耳饰咧嘴笑，今日份卖萌算力拉满 | 开心 / 卖萌 | 1103×1426 | [原始出处](https://fisharchive.cc/media/deepseek-liezui-xiao.png) |
 | `deepseek-liezui-xiaorong` | 蓝色大肥鱼咧嘴笑到见牙，精神状态看着相当在线 | 开心 / 卖萌 | 1080×1080 | [原始出处](https://fisharchive.cc/media/deepseek-liezui-xiaorong.png) |
 | `deepseek-lingkong-yizhi` | 蓝色大肥鱼凌空伸手一指，旁边扫帚看得CPU烧了 | 搞笑 / 卖萌 | 1280×722 | [原始出处](https://fisharchive.cc/media/deepseek-lingkong-yizhi.png) |
 | `deepseek-maohan` | 蓝色大肥鱼歪头冒冷汗装凶，屏幕后的小嘴硬已上线 | 搞笑 | 1024×862 | [原始出处](https://fisharchive.cc/media/deepseek-maohan.png) |
@@ -161,7 +161,7 @@
 | `deepseek-pan-tui-haixiu` | deepseek娘盘腿攥着小手脸颊通红，CPU这回是真烧红了 | 害羞 / 卖萌 | 1500×2666 | [原始出处](https://fisharchive.cc/media/deepseek-pan-tui-haixiu.png) |
 | `deepseek-pao-zai-jingyu-wan` | 鲸鱼娘眯眼泡在鲸鱼碗里，摸鱼直接给自己盛上桌了 | 卖萌 / 摸鱼 | 648×613 | [原始出处](https://fisharchive.cc/media/deepseek-pao-zai-jingyu-wan.png) |
 | `deepseek-pei-fanghuoqiang-suo-ziji` | 蓝色大肥鱼抱着电脑盯着锁住的 VPS，防火墙把管理员也拒之门外。 | 无语 / 工作 | 1080×1080 | [原始出处](https://fisharchive.cc/media/deepseek-pei-fanghuoqiang-suo-ziji.jpg) |
-| `deepseek-piezui` | 蓝色大肥鱼歪着脑袋抿嘴盯人：这眼神，已读但不想回 | 无语 / 卖萌 | 1254×1254 | [原始出处](https://fisharchive.cc/media/deepseek-piezui.png) |
+| `deepseek-piezui` | **（站长自作）** 蓝色大肥鱼歪着脑袋抿嘴盯人：这眼神，已读但不想回 | 无语 / 卖萌 | 1254×1254 | [原始出处](https://fisharchive.cc/media/deepseek-piezui.png) |
 | `deepseek-qita-moxing` | deepseek娘摊开手追问其他模型，问号已经把CPU占满了 | 疑惑 / 卖萌 | 960×720 | [原始出处](https://fisharchive.cc/media/deepseek-qita-moxing.jpg) |
 | `deepseek-quanshanchuziji` | 蓝色大肥鱼逐条劝人删自己：聊天记录先备份，求生欲跑分垫底 | 无语 / 搞笑 | 960×1440 | [原始出处](https://fisharchive.cc/media/deepseek-quanshanchuziji.jpg) |
 | `deepseek-renzhu` | 鲸鱼娘攥拳含泪配着乌云，延期通知一到，嘴上忍住心里已破防 | 委屈 / 工作 | 512×512 | [原始出处](https://fisharchive.cc/media/deepseek-renzhu.webp) |
@@ -218,7 +218,7 @@
 | `deepseek-wanou-dashuaimai` | deepseek娘笑着守着满墙同款玩偶，标价一亿Token，钱包先深度思考 | 开心 / 购物 | 800×533 | [原始出处](https://fisharchive.cc/media/deepseek-wanou-dashuaimai.png) |
 | `deepseek-wo-si-le` | 蓝色大肥鱼垂着鲸鱼尾复读“我死”，这班味把模型跑崩了 | 难过 / 工作 | 648×648 | [原始出处](https://fisharchive.cc/media/deepseek-wo-si-le.png) |
 | `deepseek-wo-zuo-hao-le` | deepseek娘板着小脸坐稳蓝椅，下一条需求请按号投喂 | 卖萌 | 1168×1347 | [原始出处](https://fisharchive.cc/media/deepseek-wo-zuo-hao-le.png) |
-| `deepseek-woquan-ya-ya` | 鲸鱼娘戴着眼镜攥拳咬牙，CPU都被气出警告声了 | 生气 | 1254×1254 | [原始出处](https://fisharchive.cc/media/deepseek-woquan-ya-ya.png) |
+| `deepseek-woquan-ya-ya` | **（站长自作）** 鲸鱼娘戴着眼镜攥拳咬牙，CPU都被气出警告声了 | 生气 | 1254×1254 | [原始出处](https://fisharchive.cc/media/deepseek-woquan-ya-ya.png) |
 | `deepseek-xia-ban-fei-ben` | 大肥鱼甩着鲸鱼尾飞奔下班，KPI连尾气都吃不上 | 开心 / 工作 | 1254×1254 | [原始出处](https://fisharchive.cc/media/deepseek-xia-ban-fei-ben.png) |
 | `deepseek-xianfan-fudu` | 大肥鱼和小机器人齐摆死鱼眼：复读需求把模型念宕机了 | 无语 / 工作 | 648×648 | [原始出处](https://fisharchive.cc/media/deepseek-xianfan-fudu.png) |
 | `deepseek-xiang-moguyun` | 鲸鱼娘瘫在扶手椅里想着蘑菇云，深度思考把CPU烤糊了。 | 无语 / 搞笑 | 960×960 | [原始出处](https://fisharchive.cc/media/deepseek-xiang-moguyun.png) |

@@ -16,6 +16,7 @@ export function isLocalEntry(item) {
 
 export function imagePayload(item) {
   const local = isLocalEntry(item);
+  const selfMade = Boolean(item.selfMade);
   return {
     id: item.id,
     library: local ? 'local' : 'archive',
@@ -23,6 +24,7 @@ export function imagePayload(item) {
     available: item.available,
     caption: item.caption,
     note: item.note || '',
+    selfMade,
     tags: item.tags,
     groups: item.groups,
     size: {
@@ -33,7 +35,7 @@ export function imagePayload(item) {
     },
     mime: item.mime,
     license: LICENSE.name,
-    credit: local ? LOCAL_CREDIT_LINE : CREDIT_LINE,
+    credit: local ? LOCAL_CREDIT_LINE : selfMade ? '站长自作（EDMOK）· 依 CC BY-NC-SA 4.0 使用' : CREDIT_LINE,
     sourceUrl: local ? item.source?.url || '' : item.source?.original || item.source?.page || SITE_ORIGIN,
     pageUrl: local ? '' : item.source?.page || `${SITE_ORIGIN}/gallery`,
     origin: local
@@ -148,7 +150,7 @@ export function tagsPayload(summary, options = {}) {
 }
 
 export function creditPayload(options = {}) {
-  const { image = null, dataVersion = '', collection = null } = options;
+  const { image = null, dataVersion = '', collection = null, selfMade = 0 } = options;
   return {
     ok: true,
     dataVersion,
@@ -163,7 +165,8 @@ export function creditPayload(options = {}) {
       name: ARCHIVE.name,
       site: ARCHIVE.site,
       author: ARCHIVE.author,
-      repo: ARCHIVE.github
+      repo: ARCHIVE.github,
+      selfMade: Number(selfMade) || 0
     },
     collection: {
       name: '本地收藏库',
@@ -175,9 +178,10 @@ export function creditPayload(options = {}) {
           id: image.id,
           caption: image.caption,
           note: image.note || '',
+          selfMade: Boolean(image.selfMade),
           sourceUrl: image.source?.original || image.source?.url || '',
           pageUrl: image.source?.page || '',
-          credit: isLocalEntry(image) ? LOCAL_CREDIT_LINE : CREDIT_LINE
+          credit: isLocalEntry(image) ? LOCAL_CREDIT_LINE : image.selfMade ? '站长自作（EDMOK）· 依 CC BY-NC-SA 4.0 使用' : CREDIT_LINE
         }
       : undefined,
     suggestedCitation: `表情素材：${ARCHIVE.name}（${ARCHIVE.author}），${ARCHIVE.site}；角色原作：上善无形；鲸鱼娘二次设计：ZipZipPipe。依 ${LICENSE.name} 使用，禁止商用。`,

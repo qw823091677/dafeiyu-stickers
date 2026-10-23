@@ -38,7 +38,7 @@ export const SCHEMA_VERSION = 1;
 
 // 抓取礼貌：站点 llms.txt 明确请求「请勿高频批量抓取」。
 export const USER_AGENT =
-  'dafeiyu-stickers/0.2.0 (+https://github.com/qw823091677/dafeiyu-stickers; sticker index for personal chat bot)';
+  'dafeiyu-stickers/0.2.1 (+https://github.com/qw823091677/dafeiyu-stickers; sticker index for personal chat bot)';
 
 export const LICENSE = Object.freeze({
   name: 'CC BY-NC-SA 4.0',
@@ -48,14 +48,14 @@ export const LICENSE = Object.freeze({
 
 // 站点「关于 / 来源与致谢」页明确列出的署名，逐字保留原文，方便二手使用者原样转载。
 export const ATTRIBUTION = Object.freeze([
-  { role: 'character', label: '鲸鱼娘角色形象原作', name: '上善无形', url: 'https://space.bilibili.com/291892724' },
+  { role: 'character', label: '鲸鱼娘角色形象原作', name: '上善无形', url: 'https://space.bilibili.com/4456176' },
   {
     role: 'design',
     label: 'DeepSeek 元素女仆鲸鱼娘二次设计',
     name: 'ZipZipPipe',
     url: 'https://space.bilibili.com/4168597'
   },
-  { role: 'archive', label: '蓝色大肥鱼档案馆（网站作者 / 整理）', name: 'EDMOK', url: 'https://space.bilibili.com/4456176' }
+  { role: 'archive', label: '蓝色大肥鱼档案馆（网站作者 / 整理）', name: 'EDMOK', url: 'https://space.bilibili.com/291892724' }
 ].map(Object.freeze));
 
 export const ARCHIVE = Object.freeze({

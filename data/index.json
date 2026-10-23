@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "project": "dafeiyu-stickers",
   "name": "蓝色大肥鱼档案馆 · 表情索引",
-  "description": "鲸鱼娘 DeepSeek 非官方同人表情包的本地索引：站内 alt 注释 + 标签 + 校验哈希 + 出处。",
+  "description": "鲸鱼娘 DeepSeek 非官方同人表情包的本地索引：站内 alt 注释 + 标签 + 校验哈希 + 出处；selfMade 表示站长自作。",
   "source": {
     "site": "https://fisharchive.cc",
     "manifest": "https://fisharchive.cc/stickers/index.json",
@@ -19,7 +19,7 @@
       "role": "character",
       "label": "鲸鱼娘角色形象原作",
       "name": "上善无形",
-      "url": "https://space.bilibili.com/291892724"
+      "url": "https://space.bilibili.com/4456176"
     },
     {
       "role": "design",
@@ -31,13 +31,14 @@
       "role": "archive",
       "label": "蓝色大肥鱼档案馆（网站作者 / 整理）",
       "name": "EDMOK",
-      "url": "https://space.bilibili.com/4456176"
+      "url": "https://space.bilibili.com/291892724"
     }
   ],
   "stats": {
     "count": 271,
     "tags": 31,
     "animated": 4,
+    "selfMade": 5,
     "totalBytes": 258992342,
     "dataVersion": "e78238e601c0"
   },
@@ -2373,6 +2374,7 @@
         "社交",
         "日常"
       ],
+      "selfMade": true,
       "width": 1254,
       "height": 1254,
       "archiveSize": {
@@ -3385,6 +3387,7 @@
       "groups": [
         "社交"
       ],
+      "selfMade": true,
       "width": 1254,
       "height": 1254,
       "archiveSize": {
@@ -3984,6 +3987,7 @@
         "情绪",
         "社交"
       ],
+      "selfMade": true,
       "width": 1103,
       "height": 1426,
       "archiveSize": {
@@ -4761,6 +4765,7 @@
         "情绪",
         "社交"
       ],
+      "selfMade": true,
       "width": 1254,
       "height": 1254,
       "archiveSize": {
@@ -6463,6 +6468,7 @@
       "groups": [
         "情绪"
       ],
+      "selfMade": true,
       "width": 1254,
       "height": 1254,
       "archiveSize": {

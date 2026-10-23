@@ -65,6 +65,7 @@ export function buildIndex(options = {}) {
   const warnings = [];
   let totalBytes = 0;
   let animated = 0;
+  let selfMade = 0;
 
   for (const entry of stickers) {
     const id = slugOf(entry);
@@ -104,6 +105,7 @@ export function buildIndex(options = {}) {
     const groups = [...new Set(tags.map((tag) => groupOfTag(catalog, tag)).filter(Boolean))];
     totalBytes += stat.size;
     if (meta.animated) animated += 1;
+    if (entry.selfMade) selfMade += 1;
 
     entries.push({
       id,
@@ -111,6 +113,7 @@ export function buildIndex(options = {}) {
       caption: String(entry.alt || '').trim(),
       tags,
       groups,
+      ...(entry.selfMade ? { selfMade: true } : {}),
       width: meta.width,
       height: meta.height,
       archiveSize: {
@@ -155,7 +158,8 @@ export function buildIndex(options = {}) {
     schemaVersion: SCHEMA_VERSION,
     project: 'dafeiyu-stickers',
     name: `${ARCHIVE.name} · 表情索引`,
-    description: '鲸鱼娘 DeepSeek 非官方同人表情包的本地索引：站内 alt 注释 + 标签 + 校验哈希 + 出处。',
+    description:
+      '鲸鱼娘 DeepSeek 非官方同人表情包的本地索引：站内 alt 注释 + 标签 + 校验哈希 + 出处；selfMade 表示站长自作。',
     source: {
       site: SITE_ORIGIN,
       manifest: MANIFEST_URL,
@@ -168,6 +172,7 @@ export function buildIndex(options = {}) {
       count: entries.length,
       tags: tags.length,
       animated,
+      selfMade,
       totalBytes,
       dataVersion: manifestSha.slice(0, 12)
     },
@@ -179,7 +184,7 @@ export function buildIndex(options = {}) {
   const tmp = `${indexFile}.${process.pid}.tmp`;
   fs.writeFileSync(tmp, `${JSON.stringify(index, null, 2)}\n`);
   fs.renameSync(tmp, indexFile);
-  log(`索引已生成：${entries.length} 张 / ${tags.length} 个标签 / ${(totalBytes / 1024 / 1024).toFixed(1)} MB → ${indexFile}`);
+  log(`索引已生成：${entries.length} 张 / ${tags.length} 个标签 / 站长自作 ${selfMade} 张 / ${(totalBytes / 1024 / 1024).toFixed(1)} MB → ${indexFile}`);
   if (missing.length) log(`⚠️ 跳过 ${missing.length} 张缺失图片（--allow-missing）`);
   return index;
 }

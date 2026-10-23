@@ -22,7 +22,7 @@
 | `schemaVersion` | 当前为 1 |
 | `source.manifestSha256` | 清单快照的 sha256，用于判断"索引对的是哪一版站点数据" |
 | `license` / `attribution` | 许可与署名，逐条对应站点「关于」页 |
-| `stats` | 数量、标签数、动图数、总字节、`dataVersion`（清单哈希前 12 位） |
+| `stats` | 数量、标签数、动图数、站长自作数（`selfMade`）、总字节、`dataVersion`（清单哈希前 12 位） |
 | `tags` | `{name, count, group}`，按数量倒序 |
 | `stickers` | 条目数组，见下 |
 
@@ -33,6 +33,7 @@
 | `id` | 站点文件名去扩展名，稳定、唯一（271 个） |
 | `file` | 本地文件名（沿用站点原扩展名） |
 | `caption` | 站点 `alt` 原文 |
+| `selfMade` | 站点 `selfMade`：站长自作（EDMOK），当前 5 张 |
 | `tags` / `groups` | 站点标签 / 标签所属组 |
 | `width` / `height` | **原图真实尺寸**（解析图片头得到） |
 | `archiveSize` | 站点展示尺寸（原清单里的 `width`/`height`） |

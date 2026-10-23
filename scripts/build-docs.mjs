@@ -19,7 +19,7 @@ function cell(text) {
 const lines = [];
 lines.push('# 表情总览');
 lines.push('');
-lines.push(`共 **${index.stats.count}** 张 · ${index.stats.tags} 个标签 · 动图 ${index.stats.animated} 张 · 约 ${(index.stats.totalBytes / 1024 / 1024).toFixed(1)} MB（原图）。`);
+lines.push(`共 **${index.stats.count}** 张 · ${index.stats.tags} 个标签 · 动图 ${index.stats.animated} 张 · 站长自作 ${index.stats.selfMade || 0} 张 · 约 ${(index.stats.totalBytes / 1024 / 1024).toFixed(1)} MB（原图）。`);
 lines.push('');
 lines.push(`数据版本 \`${index.stats.dataVersion}\` ｜ 许可 **${LICENSE.name}**（禁止商用，转载须署名）。`);
 lines.push('');
@@ -30,8 +30,9 @@ lines.push('| id | 注释 | 标签 | 尺寸 | 原图 |');
 lines.push('| --- | --- | --- | --- | --- |');
 for (const item of stickers) {
   const size = `${item.width}×${item.height}${item.animated ? ' · 动图' : ''}`;
+  const badge = item.selfMade ? '**（站长自作）** ' : '';
   lines.push(
-    `| \`${item.id}\` | ${cell(item.caption)} | ${cell(item.tags.join(' / '))} | ${size} | [原始出处](${item.source.original}) |`
+    `| \`${item.id}\` | ${badge}${cell(item.caption)} | ${cell(item.tags.join(' / '))} | ${size} | [原始出处](${item.source.original}) |`
   );
 }
 lines.push('');

@@ -329,6 +329,7 @@ async function callTool(name, args = {}) {
       let image = id ? getById(getArchive(), id) : null;
       if (id && !image) image = getById(getCollection(), id);
       if (id && !image) return toolError(`没有 id 为 ${id} 的表情`);
+      const archiveStats = libraryStats(getArchive());
       return {
         content: [
           {
@@ -336,7 +337,8 @@ async function callTool(name, args = {}) {
             text: jsonText(
               creditPayload({
                 image,
-                dataVersion: libraryStats(getArchive()).dataVersion,
+                dataVersion: archiveStats.dataVersion,
+                selfMade: archiveStats.selfMade,
                 collection: collectionStats({ dir: COLLECTION_DIR })
               })
             )

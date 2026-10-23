@@ -6,10 +6,12 @@
 
 | 角色 | 署名 | 链接 |
 | --- | --- | --- |
-| 鲸鱼娘角色形象原作 | 上善无形 | https://space.bilibili.com/291892724 |
+| 鲸鱼娘角色形象原作 | 上善无形 | https://space.bilibili.com/4456176 |
 | DeepSeek 元素女仆鲸鱼娘二次设计 | ZipZipPipe | https://space.bilibili.com/4168597 |
-| 蓝色大肥鱼档案馆（整理 / 网站） | EDMOK | https://space.bilibili.com/4456176 · https://github.com/EDMOK/blue-fish-archive |
+| 蓝色大肥鱼档案馆（整理 / 网站） | EDMOK | https://space.bilibili.com/291892724 · https://github.com/EDMOK/blue-fish-archive |
 | 单张表情 | 各创作者 | 见每张图的 `source.original`（站内原图地址） |
+
+索引里 `selfMade: true` 的 5 张（`deepseek-dui-zhe-diannao-tu-she`、`deepseek-jushou-dazhaohu`、`deepseek-liezui-xiao`、`deepseek-piezui`、`deepseek-woquan-ya-ya`）为**站长自作**，作者 EDMOK，依 CC BY-NC-SA 4.0 使用。
 
 档案馆「关于本站」原文：
 
@@ -41,7 +43,7 @@
 
 ```text
 表情素材：蓝色大肥鱼档案馆（EDMOK 整理）https://fisharchive.cc
-角色原作：上善无形 https://space.bilibili.com/291892724
+角色原作：上善无形 https://space.bilibili.com/4456176
 鲸鱼娘二次设计：ZipZipPipe https://space.bilibili.com/4168597
 依 CC BY-NC-SA 4.0 使用，禁止商用。
 ```

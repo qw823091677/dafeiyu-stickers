@@ -90,6 +90,7 @@ function printImage(item, index) {
   const mime = item.mime || '';
   const flags = [mime.replace('image/', '').toUpperCase(), `${width}×${height}`, formatBytes(bytes)];
   if (animated) flags.push('动图');
+  if (item.selfMade) flags.push('站长自作');
   if (item.available === false) flags.push('⚠️ 本地缺失');
   const library = item.library || (String(item.id || '').startsWith('local-') || item.source?.platform === 'qq' || item.source?.platform === 'file' ? 'local' : 'archive');
   console.log(`${prefix}${item.caption || '(无注释)'}`);
@@ -323,12 +324,14 @@ function cmdTags(values) {
 
 function cmdCredits(values, positionals) {
   const archiveLibrary = loadLibrary();
+  const archiveStats = libraryStats(archiveLibrary);
   const id = positionals[1];
   let image = id ? getById(archiveLibrary, id) : null;
   if (!image && id) image = getById(collectionLibrary(), id);
   const payload = creditPayload({
     image,
-    dataVersion: libraryStats(archiveLibrary).dataVersion,
+    dataVersion: archiveStats.dataVersion,
+    selfMade: archiveStats.selfMade,
     collection: collectionStats({ dir: COLLECTION_DIR })
   });
   if (values.json) {
@@ -348,6 +351,7 @@ function cmdCredits(values, positionals) {
   }
   console.log('');
   console.log(`本地收藏库：${payload.collection.count ?? 0} 张（与档案馆分开）`);
+  console.log(`站长自作：${payload.archive.selfMade ?? 0} 张（作者 EDMOK，依 CC BY-NC-SA 4.0）`);
   console.log(payload.suggestedCitation);
   console.log(payload.notice);
   return 0;
@@ -361,7 +365,7 @@ function cmdStats(values) {
     return 0;
   }
   console.log(archive.name);
-  console.log(`  ${archive.count} 张 / ${archive.tags} 个标签 / 动图 ${archive.animated} 张 / ${formatBytes(archive.totalBytes)}`);
+  console.log(`  ${archive.count} 张 / ${archive.tags} 个标签 / 动图 ${archive.animated} 张 / 站长自作 ${archive.selfMade} 张 / ${formatBytes(archive.totalBytes)}`);
   console.log(`  数据版本：${archive.dataVersion}`);
   console.log(`  站点：${archive.source.site}（清单 sha256 ${String(archive.source.manifestSha256).slice(0, 12)}…）`);
   console.log(`  许可：${archive.license.name}`);
