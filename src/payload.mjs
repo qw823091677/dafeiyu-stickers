@@ -3,16 +3,26 @@
 import { ARCHIVE, ATTRIBUTION, LICENSE, SITE_ORIGIN } from './paths.mjs';
 
 export const CREDIT_LINE = `${ARCHIVE.name}（${ARCHIVE.author} 整理）· 画师与出处见站点「来源与致谢」`;
+export const LOCAL_CREDIT_LINE = '本地收藏（来自 QQ 聊天）· 版权归原作者，禁止商用';
 export const SEND_HINT =
   '把 path 原样传给 mcp__snowluma__qq_send_image 的 images 数组发送（一次 1~3 张），不要用 read/read_image 打开文件。';
+export const COLLECT_HINT =
+  '收藏成功。之后用 sticker_search({library:"local"}) 检索本地收藏；收藏库与档案馆索引分开存放。';
 export const LICENSE_HINT = `图片版权归原作者所有，按 ${LICENSE.name} 使用：禁止商用、转载须署名并以相同方式共享。`;
 
+export function isLocalEntry(item) {
+  return item?.source?.platform === 'qq' || String(item?.id || '').startsWith('local-');
+}
+
 export function imagePayload(item) {
+  const local = isLocalEntry(item);
   return {
     id: item.id,
+    library: local ? 'local' : 'archive',
     path: item.path,
     available: item.available,
     caption: item.caption,
+    note: item.note || '',
     tags: item.tags,
     groups: item.groups,
     size: {
@@ -23,15 +33,24 @@ export function imagePayload(item) {
     },
     mime: item.mime,
     license: LICENSE.name,
-    credit: CREDIT_LINE,
-    sourceUrl: item.source?.original || item.source?.page || SITE_ORIGIN,
-    pageUrl: item.source?.page || `${SITE_ORIGIN}/gallery`
+    credit: local ? LOCAL_CREDIT_LINE : CREDIT_LINE,
+    sourceUrl: local ? item.source?.url || '' : item.source?.original || item.source?.page || SITE_ORIGIN,
+    pageUrl: local ? '' : item.source?.page || `${SITE_ORIGIN}/gallery`,
+    origin: local
+      ? {
+          key: item.source?.key || '',
+          messageId: item.source?.messageId || '',
+          collectedAt: item.source?.collectedAt || '',
+          preservedOriginal: Boolean(item.source?.preservedOriginal)
+        }
+      : undefined
   };
 }
 
-export function searchPayload(result) {
+export function searchPayload(result, options = {}) {
   return {
     ok: true,
+    library: options.library || 'archive',
     query: result.query,
     matchedTags: result.tags,
     queryTags: result.queryTags || [],
@@ -40,23 +59,32 @@ export function searchPayload(result) {
     total: result.total,
     returned: result.returned,
     images: result.results.map(imagePayload),
-    hint: result.results.length ? SEND_HINT : '没有匹配结果；试试更宽的关键词、tags 或 group，或改用 sticker_random。',
+    hint: result.results.length
+      ? SEND_HINT
+      : options.library === 'local'
+        ? '本地收藏库还没有匹配的图；让 bot 在 QQ 里看到值得收藏的图时用 sticker_collect 收藏。'
+        : '没有匹配结果；试试更宽的关键词、tags 或 group，或改用 sticker_random。',
     license: LICENSE_HINT
   };
 }
 
-export function randomPayload(result) {
+export function randomPayload(result, options = {}) {
   if (!result.found) {
     return {
       ok: false,
+      library: options.library || 'archive',
       reason: result.reason || '没有符合条件且已同步到本地的表情',
       query: result.query,
       unmatchedTags: result.filters?.unmatchedTags || [],
-      hint: '换一个 tags/group，或先去 QQ 桥接机器上运行 npm run sync。'
+      hint:
+        options.library === 'local'
+          ? '本地收藏库还没有符合条件的图；先在 QQ 里用 sticker_collect 收藏几张。'
+          : '换一个 tags/group，或先去 QQ 桥接机器上运行 npm run sync。'
     };
   }
   return {
     ok: true,
+    library: options.library || 'archive',
     query: result.query,
     poolSize: result.poolSize,
     image: imagePayload(result.result),
@@ -72,9 +100,45 @@ export function getPayload(item) {
   return { ok: true, image: imagePayload(item), hint: SEND_HINT, license: LICENSE_HINT };
 }
 
-export function tagsPayload(summary) {
+export function collectPayload(result, options = {}) {
+  const { key = '', messageId = '' } = options;
+  if (!result.created) {
+    if (result.reason === 'archive_exists') {
+      return {
+        ok: true,
+        created: false,
+        library: 'archive',
+        reason: '档案馆索引里已经有同一张图，没有重复收藏',
+        archive: result.archive,
+        hint: `直接用 sticker_search({query:"${result.archive?.caption || ''}"}) 或 sticker_get({id:"${result.archive?.id || ''}"}) 取用。`
+      };
+    }
+    if (result.reason === 'collection_exists') {
+      return {
+        ok: true,
+        created: false,
+        library: 'local',
+        reason: '本地收藏库已有同一张图（按 sha256 去重）',
+        image: imagePayload({ ...result.entry, path: result.entry.path || '', available: true })
+      };
+    }
+    return { ok: false, created: false, reason: result.reason || '未收藏' };
+  }
   return {
     ok: true,
+    created: true,
+    library: 'local',
+    image: imagePayload(result.entry),
+    source: { key, messageId },
+    hint: COLLECT_HINT,
+    license: LICENSE_HINT
+  };
+}
+
+export function tagsPayload(summary, options = {}) {
+  return {
+    ok: true,
+    library: options.library || 'archive',
     total: summary.total,
     groups: summary.groups,
     tags: summary.tags,
@@ -84,7 +148,7 @@ export function tagsPayload(summary) {
 }
 
 export function creditPayload(options = {}) {
-  const { image = null, dataVersion = '' } = options;
+  const { image = null, dataVersion = '', collection = null } = options;
   return {
     ok: true,
     dataVersion,
@@ -101,13 +165,19 @@ export function creditPayload(options = {}) {
       author: ARCHIVE.author,
       repo: ARCHIVE.github
     },
+    collection: {
+      name: '本地收藏库',
+      note: '从 QQ 群聊/私聊收藏的图片单独存放，与档案馆索引分开；版权仍归原作者，可能涉及聊天中的他人作品，请仅本地使用、不要公开再分发。',
+      ...(collection || {})
+    },
     image: image
       ? {
           id: image.id,
           caption: image.caption,
-          sourceUrl: image.source?.original || '',
+          note: image.note || '',
+          sourceUrl: image.source?.original || image.source?.url || '',
           pageUrl: image.source?.page || '',
-          credit: CREDIT_LINE
+          credit: isLocalEntry(image) ? LOCAL_CREDIT_LINE : CREDIT_LINE
         }
       : undefined,
     suggestedCitation: `表情素材：${ARCHIVE.name}（${ARCHIVE.author}），${ARCHIVE.site}；角色原作：上善无形；鲸鱼娘二次设计：ZipZipPipe。依 ${LICENSE.name} 使用，禁止商用。`,

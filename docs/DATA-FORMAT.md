@@ -61,16 +61,62 @@
 每张图的 `file / url / sha256 / bytes / mime / width / height / archiveWidth / archiveHeight / animated / fetchedAt`。
 用于增量同步与 `verify`；删除后重新 `sync` 会重新计算，不影响正确性。
 
+## `collection/index.json`（本地收藏库，不入库）
+
+与档案馆 `data/index.json` **分开**：从 QQ 群聊/私聊收藏的图片单独一份索引。
+
+```jsonc
+{
+  "schemaVersion": 1,
+  "kind": "collection",
+  "name": "本地收藏库（QQ 收藏）",
+  "license": { "name": "CC BY-NC-SA 4.0" },
+  "stats": { "count": 3, "tags": 4, "animated": 0, "totalBytes": 1234567, "updatedAt": "…" },
+  "tags": [{ "name": "无语", "count": 2, "group": "情绪" }],
+  "stickers": [
+    {
+      "id": "local-a33313d8d2",
+      "file": "local-a33313d8d2.png",
+      "caption": "从 QQ group:984323959 收藏的图片",
+      "note": "被需求折磨，适合吐槽工作",       // 收藏时由模型写
+      "tags": ["无语", "工作"],
+      "groups": ["情绪", "日常"],
+      "width": 3840, "height": 2160, "orientation": "landscape",
+      "mime": "image/png", "bytes": 4234270, "animated": false,
+      "sha256": "…",
+      "source": {
+        "platform": "qq",
+        "key": "group:984323959",
+        "messageId": "-726217640",
+        "url": "https://multimedia.nt.qq.com.cn/…",
+        "originalMime": "image/png",
+        "preservedOriginal": false,             // 原始 URL 没下到、用了桥接数据
+        "collectedAt": "…"
+      },
+      "addedAt": "…"
+    }
+  ]
+}
+```
+
+- 去重：按 `sha256`；档案馆已有的图不会重复收藏；
+- `id` 固定为 `local-<sha256 前 10 位>`，可用 `forget <id>` 删除；
+- `collection/images/` 与 `collection/index.json` 默认不入 Git（含会话/发送者信息）。
+
 ## 环境变量
 
 | 变量 | 作用 |
 | --- | --- |
-| `DAFEIYU_DATA_DIR` | 数据根目录（默认 `<repo>/data`） |
-| `DAFEIYU_IMAGE_DIR` | 图片目录（默认 `<data>/images`） |
+| `DAFEIYU_DATA_DIR` | 档案馆数据根目录（默认 `<repo>/data`） |
+| `DAFEIYU_IMAGE_DIR` | 档案馆图片目录（默认 `<data>/images`） |
+| `DAFEIYU_COLLECTION_DIR` | 本地收藏库根目录（默认 `<repo>/collection`） |
+| `QQ_BRIDGE_DIR` | qq-bridge 目录（默认仓库同级 `../qq-bridge`） |
+| `QQ_BRIDGE_URL` | 覆盖桥接控制台地址（默认读 `config.consolePort`） |
 
 ## 完整性约定
 
 1. 下载先写临时文件、再原子 rename，避免半截文件；
 2. 跳过的已有文件会重新计算 sha256 并与 `sync-state` 比对，不一致则重新下载；
 3. `verify` 会重算全部文件哈希并与 `index.json` 比对，缺失 / 不符都返回非零退出码；
-4. 任何"站内尺寸与实际尺寸不一致"只记录为 `archiveSize`，**不修改文件**。
+4. 任何"站内尺寸与实际尺寸不一致"只记录为 `archiveSize`，**不修改文件**；
+5. 收藏库写入也先写临时文件；索引损坏时**拒绝继续写入**，避免覆盖已有收藏。

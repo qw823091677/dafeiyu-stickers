@@ -5,9 +5,11 @@ Local index + MCP tools for the [Blue Big Fish Archive](https://fisharchive.cc/)
 - **271 original images** (PNG/JPEG/WebP/GIF), downloaded as-is — no re-encoding, no watermark.
 - Keeps the archive's own `alt` captions and `tags`, adds colloquial synonym search (e.g. "sleepy" → 睡觉, "boss changed requirements" → 工作).
 - Every entry stores `sha256`, byte size, real dimensions and source URL; `npm run verify` re-checks integrity.
-- Ships a **CLI** and a **stdio MCP server** (`sticker_search`, `sticker_random`, `sticker_get`, `sticker_tags`, `sticker_credit`).
+- Ships a **CLI** and a **stdio MCP server** (`sticker_search`, `sticker_random`, `sticker_collect`, `sticker_get`, `sticker_tags`, `sticker_credit`).
   Tool results contain a local absolute `path` that can be passed straight to `qq_send_image`.
-- `scripts/install-dsh.mjs` wires it into a local DSH + qq-bridge install (MCP registration, tool allow-list, image-send roots, prompt hint) and can undo everything.
+- **Separate local collection**: images the bot finds in QQ chats can be saved into `collection/` with a note and tags,
+  deduplicated by sha256 and kept apart from the archive index (`sticker_search({library:"local"})`).
+- `scripts/install-dsh.mjs` wires it into a local DSH + qq-bridge install (MCP registration, tool allow-list, image-send roots, prompt hints) and can undo everything.
 
 ## Quick start
 

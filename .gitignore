@@ -7,6 +7,9 @@ data/images/
 data/sync-state.json
 data/usage.json
 
+# 本地收藏库：从 QQ 群聊/私聊收藏的图，含会话/发送者信息，只留在本机
+collection/
+
 # 安装脚本生成的备份与临时文件
 *.bak-*
 *.tmp

@@ -5,6 +5,9 @@
 把 [蓝色大肥鱼档案馆](https://fisharchive.cc/)（鲸鱼娘 DeepSeek 非官方同人表情站）的表情包**原图**同步到本地，
 建立带标签/注释/哈希的索引，并提供 **CLI** 与 **MCP 工具**，让 QQ 机器人（qq-bridge / DSH）在聊天时能按情绪、场景直接检索和发送。
 
+另外提供一个**独立的本地收藏库**：bot 在 QQ 群聊/私聊里看到值得留的图，可以收进 `collection/`（与档案馆索引分开），
+自己写注释、打标签，之后按同样方式检索发送。
+
 - 数据来源：[fisharchive.cc](https://fisharchive.cc/) · 站内清单 `https://fisharchive.cc/stickers/index.json`
 - 当前数据版本：271 张 / 31 个标签 / 约 247 MB（原图，不转码、不压缩、不加水印）
 - 代码许可：MIT ｜ 图片与角色：**CC BY-NC-SA 4.0（禁止商用）**，详见 [CREDITS.md](CREDITS.md)
@@ -27,6 +30,7 @@ QQ 收藏表情是"手动收藏、手动备注"的，bot 很难在合适的时�
 - **原图保真**：按站点 `original` 字段下载，文件名与扩展名沿用站点，逐张校验图片头。
 - **礼貌抓取**：默认 3 并发 + 150ms 间隔，遵守站点"请勿高频批量抓取"的要求。
 - **可检索**：标签 AND 过滤、标签组（情绪/社交/日常）、自然语言 + 同义词、注释全文匹配。
+- **可收藏**：bot 在 QQ 里看到有价值的图，可收进独立的本地收藏库；按 sha256 去重，与档案馆索引分开。
 - **可校验**：`verify` 重新计算哈希并与索引比对；半截文件、磁盘损坏都能发现。
 - **可接入**：一条命令接进 DSH / qq-bridge（MCP 注册 + 工具白名单 + 发图白名单 + 提示词），可 `--uninstall` 撤销。
 - **可署名**：索引、CLI、MCP 输出都带许可与出处；不会把同人图说成"官方素材"。
@@ -59,12 +63,15 @@ npm run random -- --tags 卖萌
 node src/cli.mjs sync [--refresh-manifest] [--force] [--prune] [--concurrency 3] [--no-index]
 node src/cli.mjs verify                    # 重算 sha256 并和索引比对
 node src/cli.mjs build-index [--allow-missing]
-node src/cli.mjs search <关键词...> [--tags a,b] [--group 情绪|社交|日常] [--limit 5] [--json]
-node src/cli.mjs random [--tags ...] [--group ...] [--json]
+node src/cli.mjs search <关键词...> [--tags a,b] [--group 情绪|社交|日常] [--library archive|local|all] [--limit 5] [--json]
+node src/cli.mjs random [--tags ...] [--group ...] [--library ...] [--json]
 node src/cli.mjs get <id> [--json]
-node src/cli.mjs tags [--json]
+node src/cli.mjs tags [--library local] [--json]
 node src/cli.mjs credits [id] [--json]
 node src/cli.mjs stats [--json]
+node src/cli.mjs collect-file <图片路径> [--note ...] [--tags a,b]
+node src/cli.mjs collect-qq --key group:123 --message-id 456 --token <会话令牌> [--note ...] [--tags a,b]
+node src/cli.mjs forget <local-id>
 ```
 
 示例输出：
@@ -84,15 +91,18 @@ $ node src/cli.mjs search 今天好困 --limit 2
 
 ## MCP 工具（给 bot 用）
 
-`src/mcp-server.mjs` 是一个 stdio MCP server，提供 5 个只读工具：
+`src/mcp-server.mjs` 是一个 stdio MCP server，提供 6 个工具（除 `sticker_collect` 外都是只读）：
 
 | 工具 | 作用 | 关键参数 |
 | --- | --- | --- |
-| `sticker_search` | 按标签/关键词检索，返回本地路径 | `query` / `tags` / `group` / `limit` |
-| `sticker_random` | 在候选池里随机抽一张 | `tags` / `query` / `group` / `excludeIds` |
-| `sticker_get` | 按 id 取单张 | `id` |
-| `sticker_tags` | 列出标签、数量、分组、同义词 | — |
+| `sticker_search` | 按标签/关键词检索，返回本地路径 | `query` / `tags` / `group` / `library` / `limit` |
+| `sticker_random` | 在候选池里随机抽一张 | `tags` / `query` / `group` / `library` / `excludeIds` |
+| `sticker_collect` | 把 QQ 消息里的图收进本地收藏库 | `key` / `messageId` / `token` / `index` / `note` / `tags` |
+| `sticker_get` | 按 id 取单张（含 `local-` 收藏） | `id` |
+| `sticker_tags` | 列出标签、数量、分组、同义词 | `library` |
 | `sticker_credit` | 返回许可、署名、单张原始出处 | `id`（可选） |
+
+`library` 取值：`archive`（默认，档案馆）、`local`（本地收藏库）、`all`（两边一起搜）。
 
 调用示例（模型侧）：
 
@@ -126,6 +136,29 @@ node src/mcp-server.mjs --check   # 校验索引与图片目录
 node src/mcp-server.mjs           # 等待 JSON-RPC（换行分隔）
 ```
 
+## 本地收藏库（与档案馆分开）
+
+`collection/` 是从 QQ 群聊/私聊里收藏的图片库，**不写进档案馆的 `data/index.json`**：
+
+```text
+collection/
+├─ index.json    # 收藏索引：id / 注释 / 标签 / sha256 / 来源会话与消息 id
+└─ images/       # 收藏的原图
+```
+
+流程（bot 侧）：
+
+1. 消息带图时先 `qq_get_message_images` 看图；
+2. 觉得值得留（少见/好用/好笑/以后想发），调用 `sticker_collect({key, messageId, token, note, tags})`；
+3. 服务端通过 qq-bridge 本地 API 取图（优先原始 URL，失败回退桥接 base64），按 sha256 去重后落盘；
+4. 之后用 `sticker_search({library:"local", tags:["无语"]})` 就能找到并发送。
+
+- 收藏注释由模型写（一句话图意/适用场景），标签建议用标准标签；想手动整理可以用 `collect-file` / `forget`。
+- 档案馆里已经存在的图不会重复收藏（返回 archive 命中）。
+- **动图注意**：qq-bridge 返回给 DSH 的图片会把 GIF 转成静态 PNG（避免解码崩溃）；收藏时若原始 URL 能下到就保留原始 GIF，否则记录 `preservedOriginal:false`。
+- **隐私**：收藏库会记录来源会话 key / messageId；`collection/` 已被 `.gitignore` 排除，只留在本机。不要公开再分发群友的图。
+- **版权**：收藏图仍归原作者，CC BY-NC-SA 4.0，禁止商用。
+
 ## 接入 qq-bridge / DSH
 
 一键接入本机的 DSH + qq-bridge：
@@ -139,7 +172,7 @@ node scripts/install-dsh.mjs
 
 1. `$DSH_HOME/profiles/*/cordis.patch.yml`：注册 MCP server `dafeiyu-stickers`（默认写入所有 profile：桌面版是 `desktop`，`dsh web` 是 `web`）；
 2. `qq-tool-restrict.mjs`（仓库副本 + DSH 安装副本）：放行 `mcp__dafeiyu-stickers__` 前缀，否则工具会被 QQ 安全白名单拒绝；
-3. `qq-bridge/config.json`：把 `data/images` 加进 `socialV2.imageSend.roots`，否则 `qq_send_image` 会拒绝发送本目录的图；
+3. `qq-bridge/config.json`：把 `data/images` 与 `collection/images` 加进 `socialV2.imageSend.roots`，否则 `qq_send_image` 会拒绝发送这两个目录的图；
 4. `qq-chat-v2` preset：加一行"本地表情库"用法，让模型知道先检索再发图。
 
 改完需要**重启 DSH 和 qq-bridge**（两处配置都是启动时读取；DSH 有时会热加载 profile patch，但重启最稳）。撤销：
@@ -202,7 +235,9 @@ dafeiyu-stickers/
 │  ├─ sync.mjs           # 下载 + 校验 + 断点续传
 │  ├─ index-builder.mjs  # 合并站内注释与本地校验结果
 │  ├─ search.mjs         # 标签/同义词/注释检索
-│  ├─ mcp-server.mjs     # MCP stdio server（5 个工具）
+│  ├─ collection.mjs     # 本地收藏库（独立索引、去重、增删）
+│  ├─ qq-media.mjs       # 从 qq-bridge 取 QQ 消息图片
+│  ├─ mcp-server.mjs     # MCP stdio server（6 个工具）
 │  ├─ payload.mjs        # CLI 与 MCP 共用的输出结构
 │  ├─ image-meta.mjs     # 零依赖图片头解析（尺寸/动图）
 │  └─ paths.mjs          # 路径、许可、署名常量
@@ -211,8 +246,9 @@ dafeiyu-stickers/
 │  ├─ index.json            # 增强索引（入库）
 │  ├─ tags.json             # 标签组 + 口语同义词（入库）
 │  └─ images/               # 原图（不入库，npm run sync 生成）
+├─ collection/              # 本地收藏库（不入库，只在本机）
 ├─ scripts/install-dsh.mjs  # DSH / qq-bridge 接入器
-├─ test/                    # node:test（15 项）
+├─ test/                    # node:test（21 项）
 ├─ integrations/            # 手动接入说明与配置片段
 └─ docs/                    # 数据格式、表情总览
 ```
@@ -223,6 +259,7 @@ dafeiyu-stickers/
 - DeepSeek 元素女仆鲸鱼娘二次设计：**ZipZipPipe**（[Bilibili](https://space.bilibili.com/4168597)），依 CC BY-NC-SA 4.0 授权
 - 档案馆整理与网站：**EDMOK**（[Bilibili](https://space.bilibili.com/4456176) / [GitHub](https://github.com/EDMOK/blue-fish-archive)）
 - 单张表情的相关权利归各自创作者；本项目**不主张**图片版权。
+- 本地收藏库里的图片来自 QQ 聊天，版权仍归原作者；如果图主不希望被保存/传播，用 `forget <local-id>` 删除对应条目。
 
 使用图片请遵守 **CC BY-NC-SA 4.0**：
 
@@ -237,7 +274,7 @@ dafeiyu-stickers/
 ## 开发
 
 ```bash
-node --test test/*.test.mjs   # 15 项：图片头解析 / 检索 / 随机 / MCP 协议
+node --test test/*.test.mjs   # 21 项：图片头解析 / 检索 / 收藏库 / MCP 协议
 ```
 
 - 新增标签组或同义词：改 `data/tags.json`，跑 `npm run build-index`（索引里的 `group` 会更新）；

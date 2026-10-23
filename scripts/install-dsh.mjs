@@ -11,13 +11,16 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { REPO_ROOT, DATA_DIR, IMAGES_DIR } from '../src/paths.mjs';
+import { REPO_ROOT, DATA_DIR, IMAGES_DIR, COLLECTION_DIR } from '../src/paths.mjs';
 
 const MCP_START = '# === dafeiyu-stickers MCP BEGIN ===';
 const MCP_END = '# === dafeiyu-stickers MCP END ===';
 const PROMPT_MARK = '【本地表情库】';
-const PROMPT_TEXT =
-  '【本地表情库】 想发表情、接梗、卖萌、吐槽但 QQ 收藏里没有合适的，先用 mcp__dafeiyu-stickers__sticker_search（tags/关键词，如 开心、工作、睡觉、无语、卖萌）或 mcp__dafeiyu-stickers__sticker_random 找；返回的 path 原样传给 mcp__snowluma__qq_send_image 的 images 数组（一次 1~3 张，别刷屏）。素材来自蓝色大肥鱼档案馆，CC BY-NC-SA 4.0，禁止商用；正式/敏感话题别硬塞。';
+const COLLECT_MARK = '【收藏表情】';
+const PROMPT_LINES = [
+  '【本地表情库】 想发表情、接梗、卖萌、吐槽但 QQ 收藏里没有合适的，先用 mcp__dafeiyu-stickers__sticker_search（tags/关键词，如 开心、工作、睡觉、无语、卖萌；library 可指定 archive/local/all）或 mcp__dafeiyu-stickers__sticker_random 找；返回的 path 原样传给 mcp__snowluma__qq_send_image 的 images 数组（一次 1~3 张，别刷屏）。素材来自蓝色大肥鱼档案馆，CC BY-NC-SA 4.0，禁止商用；正式/敏感话题别硬塞。',
+  '【收藏表情】 在 QQ 群聊/私聊看到特别值得留的图（少见/好用/好笑），先 qq_get_message_images 看图确认，再调用 mcp__dafeiyu-stickers__sticker_collect（key、messageId、token、note、tags）收进本地收藏库（与档案馆分开）；note 写一句图意，tags 用标准标签。按 sha256 自动去重，不要每张都收，不要收藏群友的隐私图或明确不希望传播的图。'
+];
 const PROMPT_ANCHOR = '【操作即动作，不是 API】';
 
 function parseArgs(argv) {
@@ -280,26 +283,24 @@ function updateImageRoots(options) {
   config.socialV2 = config.socialV2 && typeof config.socialV2 === 'object' ? config.socialV2 : {};
   config.socialV2.imageSend = config.socialV2.imageSend && typeof config.socialV2.imageSend === 'object' ? config.socialV2.imageSend : {};
   const roots = Array.isArray(config.socialV2.imageSend.roots) ? config.socialV2.imageSend.roots.map(String) : [];
-  const normalized = path.resolve(options.imagesRoot);
-  const exists = roots.some((item) => {
+  // 两个库都要能发：档案馆 data/images + 本地收藏 collection/images。
+  const wanted = [
+    ...new Set([path.resolve(options.imagesRoot), path.resolve(path.join(COLLECTION_DIR, 'images'))])
+  ];
+  const isOurs = (item) => {
     try {
-      return path.resolve(item) === normalized;
+      return wanted.includes(path.resolve(item));
     } catch {
       return false;
     }
-  });
+  };
   if (options.uninstall) {
-    if (!exists) {
+    const filtered = roots.filter((item) => !isOurs(item));
+    if (filtered.length === roots.length) {
       log('  没有本工具的根目录，跳过');
       return;
     }
-    config.socialV2.imageSend.roots = roots.filter((item) => {
-      try {
-        return path.resolve(item) !== normalized;
-      } catch {
-        return true;
-      }
-    });
+    config.socialV2.imageSend.roots = filtered;
     // 原本没有 imageSend、卸载后也没有其他字段时，把空壳一起收掉，避免留下无用配置。
     if (config.socialV2.imageSend.roots.length === 0) {
       delete config.socialV2.imageSend.roots;
@@ -307,15 +308,16 @@ function updateImageRoots(options) {
       if (Object.keys(config.socialV2).length === 0) delete config.socialV2;
     }
   } else {
-    if (exists) {
-      log('  已包含图片目录，无需修改');
+    const missing = wanted.filter((item) => !roots.some((existing) => isOurs(existing) && path.resolve(existing) === item));
+    if (!missing.length) {
+      log('  已包含两个图片目录，无需修改');
       return;
     }
-    config.socialV2.imageSend.roots = [...roots, normalized];
+    config.socialV2.imageSend.roots = [...roots, ...missing];
   }
   const text = `${JSON.stringify(config, null, 2)}\n`;
   writeTextAtomic(file, text, options);
-  log(options.uninstall ? '  已移除图片目录' : `  已加入 ${normalized}`);
+  log(options.uninstall ? '  已移除本工具的图片目录' : `  已加入 ${wanted.join(' 与 ')}`);
   log('  ⚠️ 该配置在 qq-bridge 启动时读取，需要重启桥接后生效');
 }
 
@@ -325,31 +327,33 @@ function updatePromptFile(file, options, label, indent = 16) {
     log('  文件不存在，跳过');
     return;
   }
-  const promptLine = `${' '.repeat(indent)}${PROMPT_TEXT}`;
+  const prefix = ' '.repeat(indent);
+  const wanted = PROMPT_LINES.map((line) => `${prefix}${line}`);
   const original = readText(file);
   const lines = original.split('\n');
   const existingIndex = lines.findIndex((line) => line.includes(PROMPT_MARK) && line.includes('mcp__dafeiyu-stickers__'));
+  const hasCollectLine = existingIndex >= 0 && lines[existingIndex + 1]?.includes(COLLECT_MARK);
+
   if (options.uninstall) {
     if (existingIndex < 0) {
       log('  没有本工具的提示行，跳过');
       return;
     }
-    lines.splice(existingIndex, 1);
-  } else {
-    if (existingIndex >= 0) {
-      if (lines[existingIndex] === promptLine) {
-        log('  已存在且内容一致，无需修改');
-        return;
-      }
-      lines[existingIndex] = promptLine;
-    } else {
-      const anchorIndex = lines.findIndex((line) => line.includes(PROMPT_ANCHOR));
-      if (anchorIndex < 0) {
-        log(`  ⚠️ 找不到锚点「${PROMPT_ANCHOR}」，跳过（需手动把提示加进 preset）`);
-        return;
-      }
-      lines.splice(anchorIndex, 0, promptLine);
+    lines.splice(existingIndex, hasCollectLine ? 2 : 1);
+  } else if (existingIndex >= 0) {
+    const current = lines.slice(existingIndex, existingIndex + wanted.length);
+    if (current.length === wanted.length && current.every((line, index) => line === wanted[index])) {
+      log('  已存在且内容一致，无需修改');
+      return;
     }
+    lines.splice(existingIndex, hasCollectLine ? 2 : 1, ...wanted);
+  } else {
+    const anchorIndex = lines.findIndex((line) => line.includes(PROMPT_ANCHOR));
+    if (anchorIndex < 0) {
+      log(`  ⚠️ 找不到锚点「${PROMPT_ANCHOR}」，跳过（需手动把提示加进 preset）`);
+      return;
+    }
+    lines.splice(anchorIndex, 0, ...wanted);
   }
   writeTextAtomic(file, lines.join('\n'), options);
   log(options.uninstall ? '  已移除提示行' : '  已写入提示行');

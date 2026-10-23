@@ -29,20 +29,37 @@ export function tokenize(query) {
 export function loadLibrary(options = {}) {
   const indexFile = options.indexFile || INDEX_FILE;
   const tagsFile = options.tagsFile || TAGS_FILE;
+  const allowEmpty = options.allowEmpty === true;
   let index;
   try {
     index = JSON.parse(fs.readFileSync(indexFile, 'utf8').replace(/^\uFEFF/, ''));
   } catch (error) {
     if (error?.code === 'ENOENT') {
-      throw new Error(`找不到索引 ${indexFile}；先运行 \`node src/cli.mjs sync\`（会顺带构建索引）`);
+      if (!allowEmpty) {
+        throw new Error(`找不到索引 ${indexFile}；先运行 \`node src/cli.mjs sync\`（会顺带构建索引）`);
+      }
+      index = { schemaVersion: 1, name: '空库', stats: { count: 0 }, tags: [], stickers: [] };
+    } else {
+      throw new Error(`索引读取失败（${indexFile}）：${error.message}`);
     }
-    throw new Error(`索引读取失败（${indexFile}）：${error.message}`);
   }
-  if (!Array.isArray(index.stickers) || index.stickers.length === 0) {
+  if (!Array.isArray(index.stickers)) {
+    throw new Error(`索引格式异常（缺少 stickers 数组）：${indexFile}`);
+  }
+  if (index.stickers.length === 0 && !allowEmpty) {
     throw new Error(`索引里没有表情条目：${indexFile}`);
   }
   const catalog = loadTagCatalog(tagsFile);
   const tagNames = Array.isArray(index.tags) ? index.tags.map((item) => item.name) : [];
+  // 本地收藏库可能还没有任何标签；把 catalog 里的标准标签补进来，
+  // 这样 sticker_search({library:"local", tags:["睡觉"]}) 在收藏第一张之前也能正确解析。
+  if (options.includeCatalogTags) {
+    for (const names of Object.values(catalog.groups || {})) {
+      for (const name of Array.isArray(names) ? names : []) {
+        if (!tagNames.includes(name)) tagNames.push(name);
+      }
+    }
+  }
   const tagNorm = new Map(tagNames.map((name) => [name, normalize(name)]));
   const aliases = new Map(tagNames.map((name) => [name, (catalog.aliases?.[name] || []).map(normalize).filter(Boolean)]));
   const entries = index.stickers.map((entry) => ({
@@ -51,6 +68,10 @@ export function loadLibrary(options = {}) {
     captionNorm: normalize(entry.caption),
     idNorm: normalize(entry.id)
   }));
+  const tagMeta = new Map((index.tags || []).map((item) => [item.name, item]));
+  for (const name of tagNames) {
+    if (!tagMeta.has(name)) tagMeta.set(name, { name, count: 0, group: '' });
+  }
   return {
     index,
     catalog,
@@ -59,7 +80,7 @@ export function loadLibrary(options = {}) {
     tagNames,
     tagNorm,
     aliases,
-    tagMeta: new Map((index.tags || []).map((item) => [item.name, item])),
+    tagMeta,
     imagesDir: options.imagesDir || IMAGES_DIR
   };
 }

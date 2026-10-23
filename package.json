@@ -1,6 +1,6 @@
 {
   "name": "dafeiyu-stickers",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "蓝色大肥鱼档案馆（fisharchive.cc）表情包本地化工具：原图同步、可检索索引、CLI 与 MCP 工具，方便 QQ / DSH bot 直接调用",
   "type": "module",
   "license": "MIT",

@@ -1,29 +1,36 @@
 #!/usr/bin/env node
-// 命令行入口：同步原图、构建索引、检索、查看署名。
+// 命令行入口：同步档案馆、构建索引、检索、收藏 QQ 图片、查看署名。
 // 所有命令都支持 --json，方便脚本 / bot 直接消费。
 
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
+import { addCollectedImage, collectionLibrary, collectionStats, removeCollectedImage } from './collection.mjs';
 import { buildIndex } from './index-builder.mjs';
 import { formatBytes } from './image-meta.mjs';
-import { INDEX_FILE, LICENSE } from './paths.mjs';
-import { creditPayload, getPayload, LICENSE_HINT, randomPayload, searchPayload, tagsPayload } from './payload.mjs';
+import { COLLECTION_DIR, COLLECTION_IMAGES_DIR, INDEX_FILE, LICENSE } from './paths.mjs';
+import { collectPayload, getPayload, LICENSE_HINT, randomPayload, searchPayload, tagsPayload, creditPayload } from './payload.mjs';
+import { collectFromQqMessage } from './qq-media.mjs';
 import { getById, libraryStats, loadLibrary, randomPick, search, tagSummary } from './search.mjs';
 import { fetchManifest, hashFile, syncAll } from './sync.mjs';
 
 const HELP = `dafeiyu-stickers — 蓝色大肥鱼档案馆表情包本地化工具
 
 用法：
-  node src/cli.mjs sync [选项]              同步原图（默认也会重建索引）
+  node src/cli.mjs sync [选项]              同步档案馆原图（默认也会重建索引）
   node src/cli.mjs verify                   校验本地文件与索引哈希
   node src/cli.mjs build-index [选项]       只重建索引
-  node src/cli.mjs search <关键词...> [选项] 检索表情
+  node src/cli.mjs search <关键词...> [选项] 检索表情（--library local/all）
   node src/cli.mjs random [选项]            随机抽一张
-  node src/cli.mjs get <id> [--json]        按 id 查看
-  node src/cli.mjs tags [--json]            列出标签与同义词
+  node src/cli.mjs get <id> [--json]        按 id 查看（支持 local- 收藏）
+  node src/cli.mjs tags [--library local]   列出标签与同义词
   node src/cli.mjs credits [id] [--json]    查看版权署名
-  node src/cli.mjs stats [--json]           查看库统计
+  node src/cli.mjs stats [--json]           查看两个库的统计
+  node src/cli.mjs collect-file <图片路径> [--note ...] [--tags a,b]
+                                            把本地图片收进收藏库
+  node src/cli.mjs collect-qq --key group:123 --message-id 456 --token <会话令牌> [--index 1] [--note ...] [--tags a,b]
+                                            从 QQ 消息收藏（调试用；bot 走 MCP 工具）
+  node src/cli.mjs forget <id>              从收藏库删除一张
 
 sync 选项：
   --refresh-manifest   先从 fisharchive.cc 重新拉取站内索引
@@ -33,6 +40,7 @@ sync 选项：
   --no-index           同步后不重建索引
 
 search / random 选项：
+  --library <archive|local|all>  检索范围，默认 archive
   --tags <a,b>         标签过滤，支持口语同义词
   --group <组名>       情绪 / 社交 / 日常
   --limit <n>          search 返回数量（默认 5，最大 20）
@@ -44,8 +52,9 @@ search / random 选项：
 示例：
   npm run sync
   npm run search -- 好困 --tags 睡觉 --limit 3
-  npm run random -- --tags 卖萌
-  node src/cli.mjs get deepseek-bao-bi-jujue --json
+  npm run search -- 无语 --library local
+  node src/cli.mjs collect-file D:\\pics\\cat.png --note "猫猫震惊，适合接离谱消息" --tags 震惊,搞笑
+  node src/cli.mjs get local-1a2b3c4d5e
 `;
 
 function die(message) {
@@ -65,13 +74,27 @@ function splitTags(value) {
     .filter(Boolean);
 }
 
+function normalizeLibrary(value) {
+  const text = String(value || '').trim().toLowerCase();
+  if (text === 'local' || text === 'collection') return 'local';
+  if (text === 'all') return 'all';
+  return 'archive';
+}
+
 function printImage(item, index) {
   const prefix = index == null ? '' : `${index + 1}. `;
-  const flags = [item.mime?.replace('image/', '').toUpperCase(), `${item.width}×${item.height}`, formatBytes(item.bytes)];
-  if (item.animated) flags.push('动图');
-  if (!item.available) flags.push('⚠️ 本地缺失');
+  const width = item.width ?? item.size?.width;
+  const height = item.height ?? item.size?.height;
+  const bytes = item.bytes ?? item.size?.bytes;
+  const animated = item.animated ?? item.size?.animated;
+  const mime = item.mime || '';
+  const flags = [mime.replace('image/', '').toUpperCase(), `${width}×${height}`, formatBytes(bytes)];
+  if (animated) flags.push('动图');
+  if (item.available === false) flags.push('⚠️ 本地缺失');
+  const library = item.library || (String(item.id || '').startsWith('local-') || item.source?.platform === 'qq' || item.source?.platform === 'file' ? 'local' : 'archive');
   console.log(`${prefix}${item.caption || '(无注释)'}`);
-  console.log(`   id: ${item.id}`);
+  console.log(`   id: ${item.id}  [${library}]`);
+  if (item.note) console.log(`   note: ${item.note}`);
   console.log(`   tags: ${(item.tags || []).join(' / ') || '—'}`);
   console.log(`   file: ${item.path}`);
   console.log(`   ${flags.join(' · ')}`);
@@ -79,6 +102,11 @@ function printImage(item, index) {
 
 function printLicense() {
   console.log(`\n${LICENSE.name} · ${LICENSE_HINT}`);
+}
+
+function withCollectionPath(entry) {
+  if (!entry) return entry;
+  return { ...entry, path: path.join(COLLECTION_IMAGES_DIR, entry.file), available: true };
 }
 
 async function cmdSync(values) {
@@ -111,7 +139,6 @@ async function cmdSync(values) {
 }
 
 async function cmdVerify(values) {
-  // 逐张进度在这里没有意义：下面会统一汇总缺失/不符，失败项才值得打印。
   await syncAll({ verify: true, log: () => {} });
   let index;
   try {
@@ -151,9 +178,9 @@ function cmdBuildIndex(values) {
   return 0;
 }
 
-function printSearch(result) {
+function printSearch(result, label = '') {
   const tags = result.tags.length ? `标签：${result.tags.join(' / ')}` : '标签：—';
-  console.log(`「${result.query || '*' }」 ${tags} · 命中 ${result.total} 张，显示 ${result.returned} 张`);
+  console.log(`${label}「${result.query || '*' }」 ${tags} · 命中 ${result.total} 张，显示 ${result.returned} 张`);
   if (result.filters.unmatchedTags.length) console.log(`未识别标签：${result.filters.unmatchedTags.join('、')}`);
   console.log('');
   if (!result.results.length) {
@@ -164,43 +191,90 @@ function printSearch(result) {
     printImage(item, index);
     if (index !== result.results.length - 1) console.log('');
   });
-  printLicense();
 }
 
 function cmdSearch(values, positionals) {
-  const library = loadLibrary();
+  const mode = normalizeLibrary(values.library);
   const query = positionals.slice(1).join(' ');
-  const result = search(library, {
+  const options = {
     query,
     tags: splitTags(values.tags),
     group: values.group || '',
     limit: Number(values.limit) || 5
-  });
-  if (values.json) {
-    console.log(JSON.stringify(searchPayload(result), null, 2));
+  };
+  if (mode === 'local') {
+    const result = search(collectionLibrary(), options);
+    if (values.json) {
+      console.log(JSON.stringify(searchPayload(result, { library: 'local' }), null, 2));
+      return 0;
+    }
+    printSearch(result, '[本地收藏] ');
+    printLicense();
     return 0;
   }
-  printSearch(result);
+  if (mode === 'all') {
+    const archive = search(loadLibrary(), options);
+    const local = search(collectionLibrary(), options);
+    if (values.json) {
+      console.log(
+        JSON.stringify(
+          {
+            library: 'all',
+            archive: searchPayload(archive, { library: 'archive' }),
+            local: searchPayload(local, { library: 'local' })
+          },
+          null,
+          2
+        )
+      );
+      return 0;
+    }
+    printSearch(archive, '[档案馆] ');
+    console.log('');
+    printSearch(local, '[本地收藏] ');
+    printLicense();
+    return 0;
+  }
+  const result = search(loadLibrary(), options);
+  if (values.json) {
+    console.log(JSON.stringify(searchPayload(result, { library: 'archive' }), null, 2));
+    return 0;
+  }
+  printSearch(result, '[档案馆] ');
+  printLicense();
   return 0;
 }
 
 function cmdRandom(values, positionals) {
-  const library = loadLibrary();
-  const result = randomPick(library, {
+  const mode = normalizeLibrary(values.library);
+  const options = {
     query: values.query || positionals.slice(1).join(' '),
     tags: splitTags(values.tags),
     group: values.group || ''
-  });
+  };
+  const pickOne = (library) => randomPick(library, options);
+  let chosen;
+  if (mode === 'local') chosen = { library: 'local', result: pickOne(collectionLibrary()) };
+  else if (mode === 'archive') chosen = { library: 'archive', result: pickOne(loadLibrary()) };
+  else {
+    const archive = pickOne(loadLibrary());
+    const local = pickOne(collectionLibrary());
+    const pool = [
+      ...(archive.found ? [{ library: 'archive', result: archive }] : []),
+      ...(local.found ? [{ library: 'local', result: local }] : [])
+    ];
+    chosen = pool.length ? pool[Math.floor(Math.random() * pool.length)] : { library: 'all', result: archive };
+  }
   if (values.json) {
-    console.log(JSON.stringify(randomPayload(result), null, 2));
+    console.log(JSON.stringify(randomPayload(chosen.result, { library: chosen.library }), null, 2));
     return 0;
   }
-  if (!result.found) {
-    console.log(`没抽到：${result.reason || '没有符合条件的表情'}`);
+  if (!chosen.result.found) {
+    console.log(`没抽到：${chosen.result.reason || '没有符合条件的表情'}`);
     return 1;
   }
-  console.log(`随机一张（候选 ${result.poolSize} 张）：\n`);
-  printImage(result.result);
+  console.log(`随机一张（${chosen.library === 'local' ? '本地收藏' : '档案馆'}，候选 ${chosen.result.poolSize} 张）：\n`);
+  printImage(chosen.result.result);
   printLicense();
   return 0;
 }
@@ -208,8 +282,8 @@ function cmdRandom(values, positionals) {
 function cmdGet(values, positionals) {
   const id = positionals[1];
   if (!id) die('用法：node src/cli.mjs get <id>');
-  const library = loadLibrary();
-  const item = getById(library, id);
+  let item = getById(loadLibrary(), id);
+  if (!item) item = getById(collectionLibrary(), id);
   if (values.json) {
     console.log(JSON.stringify(getPayload(item), null, 2));
     return item ? 0 : 1;
@@ -219,35 +293,44 @@ function cmdGet(values, positionals) {
     return 1;
   }
   printImage(item);
-  console.log(`\n出处：${item.source?.original || item.source?.page || '—'}`);
+  console.log(`\n出处：${item.source?.original || item.source?.url || item.source?.page || '—'}`);
   printLicense();
   return 0;
 }
 
 function cmdTags(values) {
-  const library = loadLibrary();
+  const mode = normalizeLibrary(values.library) === 'local' ? 'local' : 'archive';
+  const library = mode === 'local' ? collectionLibrary() : loadLibrary();
   const summary = tagSummary(library);
   if (values.json) {
-    console.log(JSON.stringify(tagsPayload(summary), null, 2));
+    console.log(JSON.stringify(tagsPayload(summary, { library: mode }), null, 2));
+    return 0;
+  }
+  if (!Object.keys(summary.groups).length) {
+    console.log(`${mode === 'local' ? '收藏库' : '档案馆'}里还没有图片。`);
     return 0;
   }
   for (const [group, tags] of Object.entries(summary.groups)) {
-    console.log(`【${group}】`);
+    console.log(`\n【${group}】`);
     for (const tag of tags) {
       const aliases = tag.aliases.length ? `（${tag.aliases.join('、')}）` : '';
       console.log(`  ${tag.name} ${String(tag.count).padStart(3)} 张 ${aliases}`);
     }
-    console.log('');
   }
   printLicense();
   return 0;
 }
 
 function cmdCredits(values, positionals) {
-  const library = loadLibrary();
+  const archiveLibrary = loadLibrary();
   const id = positionals[1];
-  const image = id ? getById(library, id) : null;
-  const payload = creditPayload({ image, dataVersion: libraryStats(library).dataVersion });
+  let image = id ? getById(archiveLibrary, id) : null;
+  if (!image && id) image = getById(collectionLibrary(), id);
+  const payload = creditPayload({
+    image,
+    dataVersion: libraryStats(archiveLibrary).dataVersion,
+    collection: collectionStats({ dir: COLLECTION_DIR })
+  });
   if (values.json) {
     console.log(JSON.stringify(payload, null, 2));
     return id && !image ? 1 : 0;
@@ -260,28 +343,101 @@ function cmdCredits(values, positionals) {
   for (const item of payload.attribution) console.log(`${item.label}：${item.name} — ${item.url}`);
   if (payload.image) {
     console.log('');
-    console.log(`图片注释：${payload.image.caption}`);
-    console.log(`原始出处：${payload.image.sourceUrl}`);
+    console.log(`图片注释：${payload.image.note || payload.image.caption}`);
+    console.log(`原始出处：${payload.image.sourceUrl || '—'}`);
   }
   console.log('');
+  console.log(`本地收藏库：${payload.collection.count ?? 0} 张（与档案馆分开）`);
   console.log(payload.suggestedCitation);
   console.log(payload.notice);
   return 0;
 }
 
 function cmdStats(values) {
-  const library = loadLibrary();
-  const stats = libraryStats(library);
+  const archive = libraryStats(loadLibrary());
+  const local = collectionStats({ dir: COLLECTION_DIR });
   if (values.json) {
-    console.log(JSON.stringify({ ok: true, ...stats }, null, 2));
+    console.log(JSON.stringify({ ok: true, archive, local }, null, 2));
     return 0;
   }
-  console.log(`${stats.name}`);
-  console.log(`  ${stats.count} 张 / ${stats.tags} 个标签 / 动图 ${stats.animated} 张 / ${formatBytes(stats.totalBytes)}`);
-  console.log(`  数据版本：${stats.dataVersion}`);
-  console.log(`  站点：${stats.source.site}（清单 sha256 ${String(stats.source.manifestSha256).slice(0, 12)}…）`);
-  console.log(`  许可：${stats.license.name}`);
+  console.log(archive.name);
+  console.log(`  ${archive.count} 张 / ${archive.tags} 个标签 / 动图 ${archive.animated} 张 / ${formatBytes(archive.totalBytes)}`);
+  console.log(`  数据版本：${archive.dataVersion}`);
+  console.log(`  站点：${archive.source.site}（清单 sha256 ${String(archive.source.manifestSha256).slice(0, 12)}…）`);
+  console.log(`  许可：${archive.license.name}`);
+  console.log('');
+  console.log('本地收藏库（QQ）');
+  console.log(`  ${local.count} 张 / ${local.tags} 个标签 / 动图 ${local.animated} 张 / ${formatBytes(local.totalBytes)}`);
+  console.log(`  目录：${COLLECTION_IMAGES_DIR}${local.exists ? '' : '（还没有收藏）'}`);
+  if (local.updatedAt) console.log(`  最近更新：${local.updatedAt}`);
   return 0;
+}
+
+async function cmdCollectFile(values, positionals) {
+  const file = positionals[1];
+  if (!file) die('用法：node src/cli.mjs collect-file <图片路径> [--note ...] [--tags a,b]');
+  let buffer;
+  try {
+    buffer = fs.readFileSync(file);
+  } catch (error) {
+    die(`读不到文件：${error.message}`);
+  }
+  const result = await addCollectedImage({
+    buffer,
+    note: values.note || '',
+    tags: splitTags(values.tags),
+    source: { platform: 'file', collectedAt: new Date().toISOString() }
+  });
+  if (result.created && result.entry) result.entry = withCollectionPath(result.entry);
+  if (result.entry) result.entry = withCollectionPath(result.entry);
+  const payload = collectPayload(result, { key: 'file', messageId: path.basename(file) });
+  if (values.json) {
+    console.log(JSON.stringify(payload, null, 2));
+  } else if (payload.created) {
+    console.log(`已收藏：${payload.image.id}`);
+    printImage(payload.image);
+  } else {
+    console.log(payload.reason || '未收藏');
+  }
+  return 0;
+}
+
+async function cmdCollectQq(values) {
+  const key = values.key;
+  const messageId = values['message-id'];
+  const token = values.token;
+  if (!key || !messageId || !token) die('用法：node src/cli.mjs collect-qq --key <group:xxx|private:xxx> --message-id <id> --token <会话令牌>');
+  const result = await collectFromQqMessage({
+    key,
+    messageId,
+    token,
+    index: Number(values.index) || 1,
+    note: values.note || '',
+    tags: splitTags(values.tags)
+  });
+  if (result.entry) result.entry = withCollectionPath(result.entry);
+  const payload = collectPayload(result, { key, messageId });
+  if (values.json) {
+    console.log(JSON.stringify(payload, null, 2));
+  } else if (payload.created) {
+    console.log(`已收藏：${payload.image.id}（原始文件保留：${result.picked?.preservedOriginal ? '是' : '否，动图可能已静态化'}）`);
+    printImage(payload.image);
+  } else {
+    console.log(payload.reason || '未收藏');
+  }
+  return 0;
+}
+
+async function cmdForget(values, positionals) {
+  const id = positionals[1];
+  if (!id) die('用法：node src/cli.mjs forget <local-id>');
+  const result = await removeCollectedImage(id);
+  if (values.json) {
+    console.log(JSON.stringify({ ok: result.removed, ...result }, null, 2));
+    return result.removed ? 0 : 1;
+  }
+  console.log(result.removed ? `已删除：${id}` : `收藏库里没有 ${id}`);
+  return result.removed ? 0 : 1;
 }
 
 async function main() {
@@ -290,10 +446,16 @@ async function main() {
     allowPositionals: true,
     options: {
       json: { type: 'boolean', default: false },
+      library: { type: 'string' },
       tags: { type: 'string' },
       group: { type: 'string' },
       limit: { type: 'string' },
       query: { type: 'string' },
+      note: { type: 'string' },
+      key: { type: 'string' },
+      'message-id': { type: 'string' },
+      token: { type: 'string' },
+      index: { type: 'string' },
       'refresh-manifest': { type: 'boolean', default: false },
       force: { type: 'boolean', default: false },
       prune: { type: 'boolean', default: false },
@@ -329,6 +491,12 @@ async function main() {
       return cmdCredits(values, positionals);
     case 'stats':
       return cmdStats(values);
+    case 'collect-file':
+      return cmdCollectFile(values, positionals);
+    case 'collect-qq':
+      return cmdCollectQq(values);
+    case 'forget':
+      return cmdForget(values, positionals);
     default:
       die(`未知命令：${command}\n\n${HELP}`);
   }
