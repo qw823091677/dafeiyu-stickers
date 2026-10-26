@@ -348,6 +348,7 @@ function cmdCredits(values, positionals) {
     console.log('');
     console.log(`图片注释：${payload.image.note || payload.image.caption}`);
     console.log(`原始出处：${payload.image.sourceUrl || '—'}`);
+    console.log(`署名：${payload.image.credit}`);
   }
   console.log('');
   console.log(`本地收藏库：${payload.collection.count ?? 0} 张（与档案馆分开）`);
