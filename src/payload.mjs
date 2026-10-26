@@ -161,6 +161,12 @@ export function tagsPayload(summary, options = {}) {
 
 export function creditPayload(options = {}) {
   const { image = null, dataVersion = '', collection = null, selfMade = 0 } = options;
+  const localImage = image && isLocalEntry(image);
+  const suggestedCitation = localImage
+    ? image.source?.platform === 'aigengtu'
+      ? `表情素材：梗鲸（${image.source?.page || 'https://aigengtu.com/'}）；版权归原作者，依 ${LICENSE.name} 使用，禁止商用。`
+      : `表情素材：本地收藏（来自 QQ 聊天）；版权归原作者，依 ${LICENSE.name} 使用，禁止商用。`
+    : `表情素材：${ARCHIVE.name}（${ARCHIVE.author}），${ARCHIVE.site}；角色原作：上善无形；鲸鱼娘二次设计：ZipZipPipe。依 ${LICENSE.name} 使用，禁止商用。`;
   return {
     ok: true,
     dataVersion,
@@ -195,7 +201,7 @@ export function creditPayload(options = {}) {
           credit: isLocalEntry(image) ? localCreditLine(image) : image.selfMade ? '站长自作（EDMOK）· 依 CC BY-NC-SA 4.0 使用' : CREDIT_LINE
         }
       : undefined,
-    suggestedCitation: `表情素材：${ARCHIVE.name}（${ARCHIVE.author}），${ARCHIVE.site}；角色原作：上善无形；鲸鱼娘二次设计：ZipZipPipe。依 ${LICENSE.name} 使用，禁止商用。`,
+    suggestedCitation,
     notice: '本站为非官方同人整理项目，不代表任何官方立场；如作者不希望作品被收录，请联系档案馆处理。'
   };
 }
