@@ -92,7 +92,7 @@ function printImage(item, index) {
   if (animated) flags.push('动图');
   if (item.selfMade) flags.push('站长自作');
   if (item.available === false) flags.push('⚠️ 本地缺失');
-  const library = item.library || (String(item.id || '').startsWith('local-') || item.source?.platform === 'qq' || item.source?.platform === 'file' ? 'local' : 'archive');
+  const library = item.library || (String(item.id || '').startsWith('local-') || Boolean(item.source?.platform) ? 'local' : 'archive');
   console.log(`${prefix}${item.caption || '(无注释)'}`);
   console.log(`   id: ${item.id}  [${library}]`);
   if (item.note) console.log(`   note: ${item.note}`);
@@ -370,7 +370,7 @@ function cmdStats(values) {
   console.log(`  站点：${archive.source.site}（清单 sha256 ${String(archive.source.manifestSha256).slice(0, 12)}…）`);
   console.log(`  许可：${archive.license.name}`);
   console.log('');
-  console.log('本地收藏库（QQ）');
+  console.log('本地收藏库（QQ + 梗鲸）');
   console.log(`  ${local.count} 张 / ${local.tags} 个标签 / 动图 ${local.animated} 张 / ${formatBytes(local.totalBytes)}`);
   console.log(`  目录：${COLLECTION_IMAGES_DIR}${local.exists ? '' : '（还没有收藏）'}`);
   if (local.updatedAt) console.log(`  最近更新：${local.updatedAt}`);

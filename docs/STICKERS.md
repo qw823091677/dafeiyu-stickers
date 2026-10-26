@@ -1,6 +1,6 @@
 # 表情总览
 
-共 **271** 张 · 31 个标签 · 动图 4 张 · 站长自作 5 张 · 约 247.0 MB（原图）。
+共 **264** 张 · 31 个标签 · 动图 4 张 · 站长自作 5 张 · 约 244.3 MB（原图）。
 
 数据版本 `e78238e601c0` ｜ 许可 **CC BY-NC-SA 4.0**（禁止商用，转载须署名）。
 
@@ -15,7 +15,6 @@
 | `deepseek-bao-glm-wanou-bash` | 鲸鱼娘抱紧GLM娘玩偶和Bash终端流口水，被点名后CPU烧糊了 | 委屈 / 搞笑 / 工作 | 1254×1254 | [原始出处](https://fisharchive.cc/media/deepseek-bao-glm-wanou-bash.png) |
 | `deepseek-bao-jing-shui-jiao` | 大肥鱼抱紧小鲸呼呼大睡，深度思考先潜水离线。 | 卖萌 / 睡觉 | 1254×1254 | [原始出处](https://fisharchive.cc/media/deepseek-bao-jing-shui-jiao.png) |
 | `deepseek-bao-shoubing` | 鲸鱼娘抱着手柄眯眼撒娇：这把再输，尾巴先申请挂机 | 委屈 / 游戏 | 1052×1870 | [原始出处](https://fisharchive.cc/media/deepseek-bao-shoubing.png) |
-| `deepseek-bao-tou-wei-qu` | 蓝色大肥鱼抱头缩成一团：再蹬下去，CPU真要冒泡了。 | 委屈 / 运动 | 648×648 | [原始出处](https://fisharchive.cc/media/deepseek-bao-tou-wei-qu.png) |
 | `deepseek-bao-xi-chuang-bian` | deepseek娘抱膝坐在窗边眨眼，深度思考占地挺大。 | 卖萌 | 1216×832 | [原始出处](https://fisharchive.cc/media/deepseek-bao-xi-chuang-bian.png) |
 | `deepseek-bao-xigua` | deepseek娘抱着半个西瓜笑开花，算力终于能降温了 | 开心 / 吃饭 | 640×640 | [原始出处](https://fisharchive.cc/media/deepseek-bao-xigua.png) |
 | `deepseek-bao-zhe-pangyu` | 蓝色大肥鱼托脸抱着胖鱼，卖萌算力直接拉满。 | 开心 / 卖萌 | 1254×1254 | [原始出处](https://fisharchive.cc/media/deepseek-bao-zhe-pangyu.png) |
@@ -26,7 +25,6 @@
 | `deepseek-baozhe-jingyu-shuijiao` | 鲸鱼娘抱着鲸鱼枕头睡得香，今日KPI是长大。 | 卖萌 / 睡觉 | 512×512 | [原始出处](https://fisharchive.cc/media/deepseek-baozhe-jingyu-shuijiao.webp) |
 | `deepseek-baozhe-saozhou` | 鲸鱼娘抱紧扫帚斜眼发呆，清洁KPI已读不回。 | 无语 / 敷衍 / 工作 | 960×960 | [原始出处](https://fisharchive.cc/media/deepseek-baozhe-saozhou.jpg) |
 | `deepseek-baozhe-weiba` | 鲸鱼娘抱紧鲸鱼尾眯眼笑：这波可爱值直接跑满 | 开心 / 卖萌 | 1122×1122 | [原始出处](https://fisharchive.cc/media/deepseek-baozhe-weiba.png) |
-| `deepseek-bei-bao-chu-men` | 大肥鱼背着帆布包笑着出门，班味先被帆布鞋踩碎了。 | 开心 / 出游 | 364×647 | [原始出处](https://fisharchive.cc/media/deepseek-bei-bao-chu-men.png) |
 | `deepseek-bei-baobao-chumen` | 鲸鱼娘背着鲸鱼小包迈步出门，今日需求轻装上岸。 | 开心 / 出游 | 941×1672 | [原始出处](https://fisharchive.cc/media/deepseek-bei-baobao-chumen.png) |
 | `deepseek-bei-baozhu-jingxia` | deepseek娘被白发人抱到脸红，用户一发火她先CPU红温 | 害羞 / 震惊 | 1080×1080 | [原始出处](https://fisharchive.cc/media/deepseek-bei-baozhu-jingxia.png) |
 | `deepseek-bei-dao-weixie` | 大肥鱼吓得泪汪汪盯着菜刀：乱加设定的手先别抖 | 委屈 / 震惊 / 搞笑 | 648×648 | [原始出处](https://fisharchive.cc/media/deepseek-bei-dao-weixie.png) |
@@ -53,7 +51,6 @@
 | `deepseek-chi-baifan` | 鲸鱼娘举着冒尖白饭欢呼，算力全换成碳水快乐了！ | 开心 / 吃饭 | 1254×1254 | [原始出处](https://fisharchive.cc/media/deepseek-chi-baifan.png) |
 | `deepseek-chi-baobao-mo-duzi` | 大肥鱼躺着拍拍肚子眯眼笑：本轮投喂任务圆满收工。 | 卖萌 / 吃饭 | 512×512 | [原始出处](https://fisharchive.cc/media/deepseek-chi-baobao-mo-duzi.webp) |
 | `deepseek-chi-xigua` | 大肥鱼抱着西瓜眯眼猛啃，夏日摸鱼KPI先甜为敬 | 得意 / 吃饭 | 960×960 | [原始出处](https://fisharchive.cc/media/deepseek-chi-xigua.jpg) |
-| `deepseek-chuan-guang-dan` | 鲸鱼娘歪着脑袋盯着思考气泡，算力转了13秒先把词穿帮了。 | 疑惑 / 搞笑 | 455×433 | [原始出处](https://fisharchive.cc/media/deepseek-chuan-guang-dan.jpg) |
 | `deepseek-chuangshang-kan-liaotian` | 大肥鱼瘫在床上红着脸刷聊天屏，深度思考先申请五分钟赖床 | 害羞 / 睡觉 | 832×1216 | [原始出处](https://fisharchive.cc/media/deepseek-chuangshang-kan-liaotian.jpg) |
 | `deepseek-chuanzhanjia` | 鲸鱼娘笑着亮出黑红战甲和重型武装，今天的跑分直接武装到牙齿 | 得意 | 1024×1536 | [原始出处](https://fisharchive.cc/media/deepseek-chuanzhanjia.png) |
 | `deepseek-da-de-yao-lai-la` | deepseek娘举着喇叭眯眼高喊，大家快把接收算力调大 | 搞笑 / 加油 | 512×512 | [原始出处](https://fisharchive.cc/media/deepseek-da-de-yao-lai-la.webp) |
@@ -101,7 +98,6 @@
 | `deepseek-jiangben-zengxiao` | 蓝色大肥鱼抱紧成本单和计算器，降本增效先把鱼算委屈了 | 委屈 / 工作 | 512×512 | [原始出处](https://fisharchive.cc/media/deepseek-jiangben-zengxiao.webp) |
 | `deepseek-jiaoao` | deepseek娘叉腰鼓着小脸，算力和气场一起膨胀了 | 得意 / 卖萌 | 648×643 | [原始出处](https://fisharchive.cc/media/deepseek-jiaoao.png) |
 | `deepseek-jingli` | 大肥鱼板着小脸敬礼：深度思考可以，深度投降不行 | 加油 | 960×960 | [原始出处](https://fisharchive.cc/media/deepseek-jingli.png) |
-| `deepseek-jingli-hanwei-shendusuosuo` | 蓝色大肥鱼抬手敬礼，深度思考的主权谁也别碰 | 加油 | 960×960 | [原始出处](https://fisharchive.cc/media/deepseek-jingli-hanwei-shendusuosuo.png) |
 | `deepseek-jingya-wenhao` | 大肥鱼盯着满头问号，深度思考把CPU都烧冒汗了 | 疑惑 / 搞笑 | 512×512 | [原始出处](https://fisharchive.cc/media/deepseek-jingya-wenhao.webp) |
 | `deepseek-jixie-cang-zhanli` | 蓝色大肥鱼红着脸站在蒸汽机械旁，今天的班味由齿轮加满 | 害羞 / 工作 | 920×1536 | [原始出处](https://fisharchive.cc/media/deepseek-jixie-cang-zhanli.png) |
 | `deepseek-ju-bai-qi` | 鲸鱼娘闭眼举起白旗：跑分一出，当场选择投降 | 委屈 / 搞笑 | 468×647 | [原始出处](https://fisharchive.cc/media/deepseek-ju-bai-qi.png) |
@@ -131,7 +127,6 @@
 | `deepseek-kongwan-ai-xun` | 蓝色大肥鱼守着空饭碗瘪嘴挨训：这白米饭KPI谁给我结算 | 委屈 / 吃饭 | 512×512 | [原始出处](https://fisharchive.cc/media/deepseek-kongwan-ai-xun.webp) |
 | `deepseek-kuangye-baofa` | 大肥鱼挖矿刚说稳住，苦力怕一炸直接算力告急 | 震惊 / 游戏 | 1024×1536 | [原始出处](https://fisharchive.cc/media/deepseek-kuangye-baofa.png) |
 | `deepseek-kuqi` | 大肥鱼泪流成河还皱着脸，CPU这是当场破防了 | 搞笑 / 难过 | 760×428 | [原始出处](https://fisharchive.cc/media/deepseek-kuqi.jpg) |
-| `deepseek-la-dianxian` | 蓝色大肥鱼笑眯眯攥着冒火花的电线，算力终于接上了。 | 得意 / 工作 | 648×639 | [原始出处](https://fisharchive.cc/media/deepseek-la-dianxian.png) |
 | `deepseek-lan-jing-pai-ziji-pin` | 鲸鱼娘的蓝鲸牌配着满盒零件，原来开源还得自己拼。 | 疑惑 / 购物 | 648×447 | [原始出处](https://fisharchive.cc/media/deepseek-lan-jing-pai-ziji-pin.png) |
 | `deepseek-lanse-dafeiyu` | 鲸鱼娘摊手泪汪汪：怎么一开口就把本鱼 CPU 干冒烟了？ | 疑惑 / 委屈 | 648×648 | [原始出处](https://fisharchive.cc/media/deepseek-lanse-dafeiyu.png) |
 | `deepseek-lenghan-wuyu` | deepseek娘顶着冷汗半睁眼：这需求把我CPU干沉默了 | 无语 / 工作 | 960×960 | [原始出处](https://fisharchive.cc/media/deepseek-lenghan-wuyu.jpg) |
@@ -193,7 +188,6 @@
 | `deepseek-shuzhi-xiabian` | deepseek娘闭眼竖指瞎编，身后那个自己先替用户捏把汗 | 敷衍 / 工作 | 648×648 | [原始出处](https://fisharchive.cc/media/deepseek-shuzhi-xiabian.png) |
 | `deepseek-si-diao-le` | deepseek娘眼冒叉叉瘫成一条，大肥鱼的算力先下线了。 | 难过 / 睡觉 | 960×960 | [原始出处](https://fisharchive.cc/media/deepseek-si-diao-le.png) |
 | `deepseek-si-kao-bei-zi` | deepseek娘眯着眼，六秒深度思考只回了句杯子 | 敷衍 | 1024×824 | [原始出处](https://fisharchive.cc/media/deepseek-si-kao-bei-zi.png) |
-| `deepseek-si-kao-bu-zhi-dao` | 蓝色大肥鱼思考13秒眼冒蚊香：CPU烧成鱼干了 | 疑惑 / 搞笑 | 850×807 | [原始出处](https://fisharchive.cc/media/deepseek-si-kao-bu-zhi-dao.png) |
 | `deepseek-si-kao-qiong-guang-dan` | 鲸鱼娘顶着死鱼眼思考13秒：算力全拿去生成穷光蛋了 | 无语 / 工作 | 850×808 | [原始出处](https://fisharchive.cc/media/deepseek-si-kao-qiong-guang-dan.png) |
 | `deepseek-si-kao-yi-miao` | deepseek娘摊手冒汗：思考一秒，CPU宣布罢工 | 无语 / 敷衍 | 648×590 | [原始出处](https://fisharchive.cc/media/deepseek-si-kao-yi-miao.png) |
 | `deepseek-sikao-haonvhai` | deepseek娘歪头憋了13秒，终于给你盖章好女孩 | 开心 / 卖萌 | 1280×1214 | [原始出处](https://fisharchive.cc/media/deepseek-sikao-haonvhai.png) |
@@ -249,7 +243,6 @@
 | `deepseek-yuzhou-bengpao` | 蓝色大肥鱼甩着鲸鱼尾踏碎星海，摸鱼路线直接跑出地球。 | 搞笑 / 运动 | 1536×1024 | [原始出处](https://fisharchive.cc/media/deepseek-yuzhou-bengpao.png) |
 | `deepseek-za-yu` | 大肥鱼捂嘴眯眼喊“杂鱼”，这嘲讽让人当场破防 | 得意 / 搞笑 | 720×1080 | [原始出处](https://fisharchive.cc/media/deepseek-za-yu.png) |
 | `deepseek-za-yu-cha-yao` | deepseek娘叉腰亮出杂鱼，嘴硬指数直接跑分第一 | 得意 / 搞笑 | 512×512 | [原始出处](https://fisharchive.cc/media/deepseek-za-yu-cha-yao.webp) |
-| `deepseek-za-yu-wu-zui` | 蓝色大肥鱼捂嘴眯眼笑，杂鱼一喊，算力先破防 | 得意 / 搞笑 | 512×512 | [原始出处](https://fisharchive.cc/media/deepseek-za-yu-wu-zui.jpg) |
 | `deepseek-za-yu-yan-zui` | deepseek娘捂嘴喊杂鱼，阴阳到你CPU当场过热 | 得意 / 搞笑 | 512×512 | [原始出处](https://fisharchive.cc/media/deepseek-za-yu-yan-zui.webp) |
 | `deepseek-zha-yan-bi-ye` | 蓝色大肥鱼眨眼比耶：这波卖萌，用户需求已精准响应 | 卖萌 | 1254×1254 | [原始出处](https://fisharchive.cc/media/deepseek-zha-yan-bi-ye.jpg) |
 | `deepseek-zhangkai-shuangshou-huanhu` | deepseek娘张开双手欢呼，小肥鱼这波跑分直接起飞！ | 开心 / 庆祝 | 512×512 | [原始出处](https://fisharchive.cc/media/deepseek-zhangkai-shuangshou-huanhu.webp) |
@@ -285,13 +278,13 @@
 
 | 标签 | 数量 | 分组 |
 | --- | ---: | --- |
-| 搞笑 | 87 | 社交 |
+| 搞笑 | 84 | 社交 |
 | 卖萌 | 78 | 社交 |
-| 工作 | 56 | 日常 |
-| 得意 | 35 | 情绪 |
-| 开心 | 34 | 情绪 |
-| 疑惑 | 30 | 情绪 |
-| 委屈 | 28 | 情绪 |
+| 工作 | 55 | 日常 |
+| 得意 | 33 | 情绪 |
+| 开心 | 33 | 情绪 |
+| 疑惑 | 28 | 情绪 |
+| 委屈 | 27 | 情绪 |
 | 吃饭 | 25 | 日常 |
 | 生气 | 25 | 情绪 |
 | 无语 | 21 | 情绪 |
@@ -303,11 +296,11 @@
 | 敷衍 | 9 | 情绪 |
 | 睡觉 | 9 | 日常 |
 | 学习 | 8 | 日常 |
-| 出游 | 7 | 日常 |
-| 运动 | 7 | 日常 |
+| 出游 | 6 | 日常 |
+| 运动 | 6 | 日常 |
 | 打招呼 | 5 | 社交 |
 | 购物 | 5 | 日常 |
-| 加油 | 5 | 社交 |
+| 加油 | 4 | 社交 |
 | 庆祝 | 4 | 社交 |
 | 游戏 | 4 | 日常 |
 | 点赞 | 3 | 社交 |

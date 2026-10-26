@@ -12,6 +12,7 @@ import path from 'node:path';
 import { fetchBuffer, sleep } from './http.mjs';
 import { readImageMeta, sniffMime } from './image-meta.mjs';
 import {
+  EXCLUDED_FILE,
   IMAGES_DIR,
   MANIFEST_FILE,
   MANIFEST_URL,
@@ -26,12 +27,17 @@ export function sha256(buffer) {
 }
 
 export function slugOf(entry) {
+  // 补充来源的条目可以自带 id（站点文件名只是数字编号时，用它才有可读性）。
+  const explicit = typeof entry?.slug === 'string' ? entry.slug.trim() : '';
+  if (explicit) return explicit;
   const original = String(entry?.original || '');
   const base = decodeURIComponent(original.split('/').pop() || '');
   return path.basename(base, path.extname(base)).trim();
 }
 
 export function fileNameOf(entry) {
+  const explicit = typeof entry?.file === 'string' ? path.basename(entry.file.trim()) : '';
+  if (explicit) return explicit;
   const original = String(entry?.original || '');
   const base = decodeURIComponent(original.split('/').pop() || '');
   return path.basename(base);
@@ -41,14 +47,47 @@ export function isValidSlug(slug) {
   return typeof slug === 'string' && slug.length > 0 && slug.length <= 120 && /^[A-Za-z0-9._-]+$/.test(slug);
 }
 
-export function loadManifest(file = MANIFEST_FILE) {
+function readManifestPart(file, { optional = false } = {}) {
   if (!fs.existsSync(file)) {
+    if (optional) return null;
     throw new Error(`找不到站内索引 ${file}；先运行 \`node src/cli.mjs sync --refresh-manifest\``);
   }
   const raw = fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, '');
   const parsed = JSON.parse(raw);
   const stickers = Array.isArray(parsed?.stickers) ? parsed.stickers : null;
   if (!stickers || stickers.length === 0) throw new Error(`${file} 里没有 stickers 数组`);
+  return { file, raw, data: parsed, stickers };
+}
+
+/**
+ * 读取本地去重排除表。返回 Map<slug, 原因>；文件不存在视为没有排除项。
+ */
+export function loadExcluded(file = EXCLUDED_FILE) {
+  const map = new Map();
+  if (!fs.existsSync(file)) return map;
+  try {
+    const parsed = JSON.parse(fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, ''));
+    for (const item of parsed?.items || []) {
+      const slug = typeof item?.slug === 'string' ? item.slug.trim() : '';
+      if (slug) map.set(slug, String(item.reason || '已在本地去重表排除'));
+    }
+  } catch {
+    // 排除表损坏不应阻断同步：当作没有排除项，索引会多出重复条目而已。
+  }
+  return map;
+}
+
+/**
+ * 读取主清单，并按本地去重排除表过滤。
+ *
+ * 其它来源（如梗鲸 aigengtu.com）的图不在这里合并：它们属于本地收藏库
+ * （collection/），由 `type: local` 的索引单独管理，不混进档案馆。
+ */
+export function loadManifest(file = MANIFEST_FILE) {
+  const main = readManifestPart(file);
+  const excluded = loadExcluded();
+  const stickers = main.stickers.filter((entry) => !excluded.has(slugOf(entry)));
+
   const seen = new Set();
   for (const entry of stickers) {
     const slug = slugOf(entry);
@@ -57,7 +96,13 @@ export function loadManifest(file = MANIFEST_FILE) {
     seen.add(slug);
     if (!entry.original) throw new Error(`条目 ${slug} 缺少 original`);
   }
-  return { file, raw, data: parsed, stickers };
+  return {
+    file,
+    raw: main.raw,
+    data: main.data,
+    excluded,
+    stickers
+  };
 }
 
 export async function fetchManifest({ log = () => {} } = {}) {

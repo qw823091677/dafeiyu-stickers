@@ -14,6 +14,9 @@ export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url
 export const DATA_DIR = path.resolve(process.env.DAFEIYU_DATA_DIR || path.join(REPO_ROOT, 'data'));
 export const IMAGES_DIR = path.resolve(process.env.DAFEIYU_IMAGE_DIR || path.join(DATA_DIR, 'images'));
 export const MANIFEST_FILE = path.join(DATA_DIR, 'manifest.source.json');
+// 本地去重排除表：与另一张图是同一张（仅尺寸/水印不同）的条目。
+// 在这里登记后，即使刷新站内清单也不会重新入库或被下载。
+export const EXCLUDED_FILE = path.join(DATA_DIR, 'excluded.json');
 export const INDEX_FILE = path.join(DATA_DIR, 'index.json');
 export const TAGS_FILE = path.join(DATA_DIR, 'tags.json');
 export const SYNC_STATE_FILE = path.join(DATA_DIR, 'sync-state.json');
@@ -38,7 +41,7 @@ export const SCHEMA_VERSION = 1;
 
 // 抓取礼貌：站点 llms.txt 明确请求「请勿高频批量抓取」。
 export const USER_AGENT =
-  'dafeiyu-stickers/0.2.1 (+https://github.com/qw823091677/dafeiyu-stickers; sticker index for personal chat bot)';
+  'dafeiyu-stickers/0.2.2 (+https://github.com/qw823091677/dafeiyu-stickers; sticker index for personal chat bot)';
 
 export const LICENSE = Object.freeze({
   name: 'CC BY-NC-SA 4.0',

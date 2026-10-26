@@ -4,6 +4,7 @@ import { ARCHIVE, ATTRIBUTION, LICENSE, SITE_ORIGIN } from './paths.mjs';
 
 export const CREDIT_LINE = `${ARCHIVE.name}（${ARCHIVE.author} 整理）· 画师与出处见站点「来源与致谢」`;
 export const LOCAL_CREDIT_LINE = '本地收藏（来自 QQ 聊天）· 版权归原作者，禁止商用';
+export const AIGENGTU_CREDIT_LINE = '梗鲸（aigengtu.com）· 版权归原作者，禁止商用';
 export const SEND_HINT =
   '把 path 原样传给 mcp__snowluma__qq_send_image 的 images 数组发送（一次 1~3 张），不要用 read/read_image 打开文件。';
 export const COLLECT_HINT =
@@ -11,7 +12,14 @@ export const COLLECT_HINT =
 export const LICENSE_HINT = `图片版权归原作者所有，按 ${LICENSE.name} 使用：禁止商用、转载须署名并以相同方式共享。`;
 
 export function isLocalEntry(item) {
-  return item?.source?.platform === 'qq' || String(item?.id || '').startsWith('local-');
+  return Boolean(item?.source?.platform) || String(item?.id || '').startsWith('local-');
+}
+
+export function localCreditLine(item) {
+  const platform = item?.source?.platform;
+  if (platform === 'aigengtu') return AIGENGTU_CREDIT_LINE;
+  if (platform === 'qq') return LOCAL_CREDIT_LINE;
+  return '本地收藏 · 版权归原作者，禁止商用';
 }
 
 export function imagePayload(item) {
@@ -35,13 +43,15 @@ export function imagePayload(item) {
     },
     mime: item.mime,
     license: LICENSE.name,
-    credit: local ? LOCAL_CREDIT_LINE : selfMade ? '站长自作（EDMOK）· 依 CC BY-NC-SA 4.0 使用' : CREDIT_LINE,
-    sourceUrl: local ? item.source?.url || '' : item.source?.original || item.source?.page || SITE_ORIGIN,
-    pageUrl: local ? '' : item.source?.page || `${SITE_ORIGIN}/gallery`,
+    credit: local ? localCreditLine(item) : selfMade ? '站长自作（EDMOK）· 依 CC BY-NC-SA 4.0 使用' : CREDIT_LINE,
+    sourceUrl: local ? item.source?.url || item.source?.original || '' : item.source?.original || item.source?.page || SITE_ORIGIN,
+    pageUrl: local ? item.source?.page || '' : item.source?.page || `${SITE_ORIGIN}/gallery`,
     origin: local
       ? {
+          platform: item.source?.platform || '',
           key: item.source?.key || '',
           messageId: item.source?.messageId || '',
+          page: item.source?.page || '',
           collectedAt: item.source?.collectedAt || '',
           preservedOriginal: Boolean(item.source?.preservedOriginal)
         }
@@ -169,8 +179,8 @@ export function creditPayload(options = {}) {
       selfMade: Number(selfMade) || 0
     },
     collection: {
-      name: '本地收藏库',
-      note: '从 QQ 群聊/私聊收藏的图片单独存放，与档案馆索引分开；版权仍归原作者，可能涉及聊天中的他人作品，请仅本地使用、不要公开再分发。',
+      name: '本地收藏库（QQ + 梗鲸）',
+      note: '从 QQ 群聊/私聊收藏的图片，以及从梗鲸（aigengtu.com）导入的补充图；与档案馆索引分开，版权仍归原作者，可能涉及聊天中的他人作品，请仅本地使用、不要公开再分发。梗鲸来源的授权请在再分发前自行核实。',
       ...(collection || {})
     },
     image: image
@@ -179,9 +189,10 @@ export function creditPayload(options = {}) {
           caption: image.caption,
           note: image.note || '',
           selfMade: Boolean(image.selfMade),
-          sourceUrl: image.source?.original || image.source?.url || '',
+          platform: image.source?.platform || '',
+          sourceUrl: image.source?.url || image.source?.original || '',
           pageUrl: image.source?.page || '',
-          credit: isLocalEntry(image) ? LOCAL_CREDIT_LINE : image.selfMade ? '站长自作（EDMOK）· 依 CC BY-NC-SA 4.0 使用' : CREDIT_LINE
+          credit: isLocalEntry(image) ? localCreditLine(image) : image.selfMade ? '站长自作（EDMOK）· 依 CC BY-NC-SA 4.0 使用' : CREDIT_LINE
         }
       : undefined,
     suggestedCitation: `表情素材：${ARCHIVE.name}（${ARCHIVE.author}），${ARCHIVE.site}；角色原作：上善无形；鲸鱼娘二次设计：ZipZipPipe。依 ${LICENSE.name} 使用，禁止商用。`,

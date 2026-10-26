@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "note": "本地去重排除表：这些 slug 和另一张图是同一张（仅尺寸/水印/裁切不同），只保留 duplicateOf 指向的清晰版本。loadManifest 会过滤掉它们，所以即使重新拉取站内清单，这些条目也不会再进索引、也不会被 sync 重新下载。",
+  "items": [
+    {
+      "slug": "deepseek-bao-tou-wei-qu",
+      "duplicateOf": "deepseek-buyaozaideng",
+      "reason": "同一张「不要再蹬了」：648×648 vs 960×960"
+    },
+    {
+      "slug": "deepseek-bei-bao-chu-men",
+      "duplicateOf": "deepseek-bei-baobao-chumen",
+      "reason": "同一张蓝裙出门：364×647 裁切版 vs 941×1672 完整版"
+    },
+    {
+      "slug": "deepseek-chuan-guang-dan",
+      "duplicateOf": "deepseek-si-kao-qiong-guang-dan",
+      "reason": "同一张「穷光蛋」思考气泡：455×433 低清版 vs 850×808"
+    },
+    {
+      "slug": "deepseek-jingli-hanwei-shendusuosuo",
+      "duplicateOf": "deepseek-jingli",
+      "reason": "同一张「誓死捍卫深度求索」敬礼：577KB vs 1.09MB（同尺寸更高画质）"
+    },
+    {
+      "slug": "deepseek-la-dianxian",
+      "duplicateOf": "deepseek-shou-wo-shandianxian",
+      "reason": "同一张「看起来又该电了」：648×639 vs 897×884"
+    },
+    {
+      "slug": "deepseek-si-kao-bu-zhi-dao",
+      "duplicateOf": "deepseek-xuanyun-liukoushui",
+      "reason": "同一张「我不知道耶」蚊香眼：850×807 vs 1137×1080"
+    },
+    {
+      "slug": "deepseek-za-yu-wu-zui",
+      "duplicateOf": "deepseek-za-yu-yan-zui",
+      "reason": "同一张「杂鱼♡」：带「知乎 @林夕雨」水印版 vs 干净版"
+    }
+  ]
+}

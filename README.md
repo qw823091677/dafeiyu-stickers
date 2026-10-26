@@ -9,7 +9,8 @@
 自己写注释、打标签，之后按同样方式检索发送。
 
 - 数据来源：[fisharchive.cc](https://fisharchive.cc/) · 站内清单 `https://fisharchive.cc/stickers/index.json` · 上游仓库 [EDMOK/blue-fish-archive](https://github.com/EDMOK/blue-fish-archive)
-- 当前数据版本：271 张 / 31 个标签 / 站长自作 5 张 / 约 247 MB（原图，不转码、不压缩、不加水印）
+- 当前数据：档案馆 **264 张**（主站 271，7 张同图重复已在本地去重）/ 31 个标签 / 站长自作 5 张 / 约 244 MB（原图，不转码、不压缩、不加水印）
+- 另有**本地收藏库** 303 张：QQ 收藏 3 张 + 梗鲸（aigengtu.com）导入 300 张，单独存放，不混进档案馆索引
 - 代码许可：MIT ｜ 图片与角色：**CC BY-NC-SA 4.0（禁止商用）**，详见 [CREDITS.md](CREDITS.md)
 
 > 这不是官方项目，也不代表 DeepSeek 或档案馆立场。图片版权归原作者所有，本项目只做本地化整理与检索工具。
@@ -17,7 +18,7 @@
 ## 它解决什么问题
 
 QQ 收藏表情是"手动收藏、手动备注"的，bot 很难在合适的时机找到合适的图。
-这个工具把档案馆的 271 张同人表情变成一份**可检索的本地图库**：
+这个工具把档案馆的 264 张同人表情变成一份**可检索的本地图库**：
 
 - 站内已有的 `alt` 注释与 `tags` 标签被完整保留，不重新编造；
 - 补了一层口语同义词（"好困"→睡觉、"老板改需求"→工作），模型用自然语言也能搜到；
@@ -43,7 +44,7 @@ QQ 收藏表情是"手动收藏、手动备注"的，bot 很难在合适的时�
 git clone https://github.com/qw823091677/dafeiyu-stickers.git
 cd dafeiyu-stickers
 
-# 1) 下载 271 张原图（约 247 MB），完成后自动构建索引
+# 1) 下载 264 张原图（约 244 MB），完成后自动构建索引
 npm run sync
 
 # 2) 看看有什么
@@ -138,12 +139,16 @@ node src/mcp-server.mjs           # 等待 JSON-RPC（换行分隔）
 
 ## 本地收藏库（与档案馆分开）
 
-`collection/` 是从 QQ 群聊/私聊里收藏的图片库，**不写进档案馆的 `data/index.json`**：
+`collection/` 装两类图，**都不写进档案馆的 `data/index.json`**：
+
+- QQ 群聊/私聊里收藏的图（`source.platform: "qq"`，`local-` 前缀）
+- 从梗鲸（aigengtu.com）导入的补充图（`source.platform: "aigengtu"`，`gj-` 前缀，当前 300 张）
 
 ```text
 collection/
-├─ index.json    # 收藏索引：id / 注释 / 标签 / sha256 / 来源会话与消息 id
-└─ images/       # 收藏的原图
+├─ index.json    # 收藏索引：id / 注释 / 标签 / sha256 / 来源（会话或来源页）
+├─ images/       # 收藏的原图
+└─ sources/      # 导入来源清单（如 aigengtu.manifest.json）
 ```
 
 流程（bot 侧）：
@@ -155,8 +160,9 @@ collection/
 
 - 收藏注释由模型写（一句话图意/适用场景），标签建议用标准标签；想手动整理可以用 `collect-file` / `forget`。
 - 档案馆里已经存在的图不会重复收藏（返回 archive 命中）。
+- 梗鲸导入的图带 `source.page`（`aigengtu.com/archive#…`），`sticker_credit` 会显示「梗鲸（aigengtu.com）」而不是档案馆；其授权/作者请在再分发前自行核实。
 - **动图注意**：qq-bridge 返回给 DSH 的图片会把 GIF 转成静态 PNG（避免解码崩溃）；收藏时若原始 URL 能下到就保留原始 GIF，否则记录 `preservedOriginal:false`。
-- **隐私**：收藏库会记录来源会话 key / messageId；`collection/` 已被 `.gitignore` 排除，只留在本机。不要公开再分发群友的图。
+- **隐私**：QQ 收藏会记录来源会话 key / messageId；`collection/` 已被 `.gitignore` 排除，只留在本机。不要公开再分发群友的图。
 - **版权**：收藏图仍归原作者，CC BY-NC-SA 4.0，禁止商用。
 
 ## 接入 qq-bridge / DSH
@@ -197,8 +203,8 @@ node scripts/install-dsh.mjs --uninstall
   "schemaVersion": 1,
   "source": { "site": "https://fisharchive.cc", "manifestSha256": "…" },
   "license": { "name": "CC BY-NC-SA 4.0", "url": "…" },
-  "stats": { "count": 271, "tags": 31, "animated": 4, "selfMade": 5, "totalBytes": 258992342, "dataVersion": "e78238e601c0" },
-  "tags": [{ "name": "搞笑", "count": 87, "group": "社交" }],
+  "stats": { "count": 264, "tags": 31, "animated": 4, "selfMade": 5, "totalBytes": 256000000, "dataVersion": "e78238e601c0" },
+  "tags": [{ "name": "搞笑", "count": 85, "group": "社交" }],
   "stickers": [
     {
       "id": "deepseek-pa-zhe-shui-jiao",
@@ -221,11 +227,12 @@ node scripts/install-dsh.mjs --uninstall
 - `selfMade` 是上游 `index.json` 的字段，标记站长自作（当前 5 张），CLI / MCP 输出会显示「站长自作」；
 - `data/tags.json` 是人工维护的标签组与口语同义词（可自行扩充）；
 - 站点的 `width/height` 是预览尺寸，原图通常更大，所以额外记录 `archiveSize`；
-- `data/manifest.source.json` 是站内清单原始快照，`data/images/` 默认不入库（见 `.gitignore`）。
+- `data/manifest.source.json` 是站内清单原始快照，`data/excluded.json` 是本地去重排除表（同图不同尺寸/水印的条目在这里登记一次，之后不会被索引或重新下载），`data/images/` 默认不入库（见 `.gitignore`）。
+- 梗鲸（aigengtu.com）的 300 张**不在档案馆索引里**，它们导入到本地收藏库 `collection/`，来源清单留在 `collection/sources/aigengtu.manifest.json`（本地）。
 
 ### 为什么原图不入库
 
-一张同人图几 MB，271 张约 247 MB，直接塞进 Git 会让 clone 和 diff 都很难受；图片版权也属于原作者。
+一张同人图几 MB，档案馆 264 张约 244 MB、本地收藏 303 张约 497 MB，直接塞进 Git 会让 clone 和 diff 都很难受；图片版权也属于原作者。
 本仓库只提交**索引与校验信息**，`npm run sync` 会在本机重建图片目录。索引里的 `sha256` 保证你下到的是同一张图。
 
 ## 目录结构
@@ -244,11 +251,16 @@ dafeiyu-stickers/
 │  ├─ image-meta.mjs     # 零依赖图片头解析（尺寸/动图）
 │  └─ paths.mjs          # 路径、许可、署名常量
 ├─ data/
-│  ├─ manifest.source.json  # 站内清单原始快照（入库）
-│  ├─ index.json            # 增强索引（入库）
+│  ├─ manifest.source.json  # 主站清单原始快照（入库）
+│  ├─ excluded.json         # 本地去重排除表：同图不同尺寸/水印的条目（入库）
+│  ├─ index.json            # 档案馆增强索引（入库）
 │  ├─ tags.json             # 标签组 + 口语同义词（入库）
-│  └─ images/               # 原图（不入库，npm run sync 生成）
+│  └─ images/               # 档案馆原图（不入库，npm run sync 生成）
+├─ .work/                   # 一次性导入脚本与预览图缓存（不入库，可删）
 ├─ collection/              # 本地收藏库（不入库，只在本机）
+│  ├─ index.json            # QQ + 梗鲸收藏索引
+│  ├─ images/               # 收藏原图
+│  └─ sources/              # 导入来源清单（如 aigengtu.manifest.json）
 ├─ scripts/install-dsh.mjs  # DSH / qq-bridge 接入器
 ├─ test/                    # node:test（21 项）
 ├─ integrations/            # 手动接入说明与配置片段
@@ -259,10 +271,11 @@ dafeiyu-stickers/
 
 - 角色形象原作：**上善无形**（[Bilibili](https://space.bilibili.com/4456176)）
 - DeepSeek 元素女仆鲸鱼娘二次设计：**ZipZipPipe**（[Bilibili](https://space.bilibili.com/4168597)），依 CC BY-NC-SA 4.0 授权
-- 档案馆整理与网站：**EDMOK**（[Bilibili](https://space.bilibili.com/291892724) / [GitHub](https://github.com/EDMOK/blue-fish-archive)）
+- 档案馆整理与网站：**EDMOK**（[Bilibili](https://space.bilibili.com/291892724) / [GitHub](https://github.com/EDMOK/blue-fish-archive)），站点 [fisharchive.cc](https://fisharchive.cc/)
 - 索引里 `selfMade: true` 的 5 张为**站长自作**（EDMOK），CLI/MCP 输出会标注。
 - 单张表情的相关权利归各自创作者；本项目**不主张**图片版权。
-- 本地收藏库里的图片来自 QQ 聊天，版权仍归原作者；如果图主不希望被保存/传播，用 `forget <local-id>` 删除对应条目。
+- 本地收藏库里另有从 [梗鲸 aigengtu.com](https://aigengtu.com/) 导入的 300 张，仅在本地收藏库使用，**不随档案馆索引分发**；其授权/作者请在再分发前自行核实。
+- 本地收藏库里的图片来自 QQ 聊天或梗鲸，版权仍归原作者；如果图主不希望被保存/传播，用 `forget <id>` 删除对应条目。
 
 使用图片请遵守 **CC BY-NC-SA 4.0**：
 

@@ -52,10 +52,10 @@ function emptyIndex() {
   return {
     schemaVersion: SCHEMA_VERSION,
     kind: 'collection',
-    name: '本地收藏库（QQ 收藏）',
-    description: '从 QQ 群聊/私聊收藏的图片，与蓝色大肥鱼档案馆索引分开存放。',
+    name: '本地收藏库（QQ + 梗鲸）',
+    description: '从 QQ 群聊/私聊收藏的图片，以及从梗鲸（aigengtu.com）导入的补充图；与蓝色大肥鱼档案馆索引分开存放。',
     license: LICENSE,
-    source: { type: 'qq', reader: 'qq-bridge' },
+    source: { type: 'local', sources: ['qq', 'aigengtu'] },
     stats: { count: 0, tags: 0, animated: 0, totalBytes: 0, updatedAt: '' },
     tags: [],
     stickers: []

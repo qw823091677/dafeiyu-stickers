@@ -8,8 +8,8 @@
 
 import crypto from 'node:crypto';
 import fs from 'node:fs';
-import { INDEX_FILE, MANIFEST_FILE } from '../src/paths.mjs';
-import { slugOf } from '../src/sync.mjs';
+import { INDEX_FILE } from '../src/paths.mjs';
+import { loadManifest, slugOf } from '../src/sync.mjs';
 
 const errors = [];
 const fail = (message) => errors.push(message);
@@ -23,15 +23,20 @@ function readJson(file, label) {
   }
 }
 
-const manifestRaw = fs.existsSync(MANIFEST_FILE) ? fs.readFileSync(MANIFEST_FILE) : null;
 const index = readJson(INDEX_FILE, '索引');
-const manifest = manifestRaw ? readJson(MANIFEST_FILE, '站内快照') : null;
 
-if (!manifestRaw) fail(`找不到站内快照：${MANIFEST_FILE}`);
+let manifest = null;
+try {
+  manifest = loadManifest();
+} catch (error) {
+  fail(`站内快照读取失败：${error.message}`);
+}
+
 if (index && manifest) {
   if (index.schemaVersion !== 1) fail(`schemaVersion 应为 1，实际 ${index.schemaVersion}`);
 
-  const manifestSha = crypto.createHash('sha256').update(manifestRaw).digest('hex');
+  // 只校验主清单；梗鲸等补充图在本地收藏库，不参与档案馆索引。
+  const manifestSha = crypto.createHash('sha256').update(manifest.raw, 'utf8').digest('hex');
   if (index.source?.manifestSha256 !== manifestSha) {
     fail(`索引记录的 manifestSha256 与当前快照不一致：${index.source?.manifestSha256 || '(空)'} != ${manifestSha}`);
   }

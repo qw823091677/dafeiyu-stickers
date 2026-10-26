@@ -35,17 +35,17 @@
     }
   ],
   "stats": {
-    "count": 271,
+    "count": 264,
     "tags": 31,
     "animated": 4,
     "selfMade": 5,
-    "totalBytes": 258992342,
+    "totalBytes": 256159869,
     "dataVersion": "e78238e601c0"
   },
   "tags": [
     {
       "name": "搞笑",
-      "count": 87,
+      "count": 84,
       "group": "社交"
     },
     {
@@ -55,27 +55,27 @@
     },
     {
       "name": "工作",
-      "count": 56,
+      "count": 55,
       "group": "日常"
     },
     {
       "name": "得意",
-      "count": 35,
+      "count": 33,
       "group": "情绪"
     },
     {
       "name": "开心",
-      "count": 34,
+      "count": 33,
       "group": "情绪"
     },
     {
       "name": "疑惑",
-      "count": 30,
+      "count": 28,
       "group": "情绪"
     },
     {
       "name": "委屈",
-      "count": 28,
+      "count": 27,
       "group": "情绪"
     },
     {
@@ -135,12 +135,12 @@
     },
     {
       "name": "出游",
-      "count": 7,
+      "count": 6,
       "group": "日常"
     },
     {
       "name": "运动",
-      "count": 7,
+      "count": 6,
       "group": "日常"
     },
     {
@@ -155,7 +155,7 @@
     },
     {
       "name": "加油",
-      "count": 5,
+      "count": 4,
       "group": "社交"
     },
     {
@@ -380,36 +380,6 @@
         "original": "https://fisharchive.cc/media/deepseek-bao-shoubing.png",
         "preview": "https://fisharchive.cc/previews/deepseek-bao-shoubing.webp",
         "large": "https://fisharchive.cc/large/deepseek-bao-shoubing.webp"
-      }
-    },
-    {
-      "id": "deepseek-bao-tou-wei-qu",
-      "file": "deepseek-bao-tou-wei-qu.png",
-      "caption": "蓝色大肥鱼抱头缩成一团：再蹬下去，CPU真要冒泡了。",
-      "tags": [
-        "委屈",
-        "运动"
-      ],
-      "groups": [
-        "情绪",
-        "日常"
-      ],
-      "width": 648,
-      "height": 648,
-      "archiveSize": {
-        "width": 480,
-        "height": 480
-      },
-      "orientation": "square",
-      "mime": "image/png",
-      "bytes": 571395,
-      "animated": false,
-      "sha256": "7c10bf038455575fa4c333cd93b97171a7a5949b0204791d2c5b61d05abfb25f",
-      "source": {
-        "page": "https://fisharchive.cc/gallery",
-        "original": "https://fisharchive.cc/media/deepseek-bao-tou-wei-qu.png",
-        "preview": "https://fisharchive.cc/previews/deepseek-bao-tou-wei-qu.webp",
-        "large": "https://fisharchive.cc/large/deepseek-bao-tou-wei-qu.webp"
       }
     },
     {
@@ -709,36 +679,6 @@
         "original": "https://fisharchive.cc/media/deepseek-baozhe-weiba.png",
         "preview": "https://fisharchive.cc/previews/deepseek-baozhe-weiba.webp",
         "large": "https://fisharchive.cc/large/deepseek-baozhe-weiba.webp"
-      }
-    },
-    {
-      "id": "deepseek-bei-bao-chu-men",
-      "file": "deepseek-bei-bao-chu-men.png",
-      "caption": "大肥鱼背着帆布包笑着出门，班味先被帆布鞋踩碎了。",
-      "tags": [
-        "开心",
-        "出游"
-      ],
-      "groups": [
-        "情绪",
-        "日常"
-      ],
-      "width": 364,
-      "height": 647,
-      "archiveSize": {
-        "width": 270,
-        "height": 480
-      },
-      "orientation": "portrait",
-      "mime": "image/png",
-      "bytes": 321670,
-      "animated": false,
-      "sha256": "8030b329983ba5092b20b531e10fa621b03bd264b7d294c3379b651883e7b4c0",
-      "source": {
-        "page": "https://fisharchive.cc/gallery",
-        "original": "https://fisharchive.cc/media/deepseek-bei-bao-chu-men.png",
-        "preview": "https://fisharchive.cc/previews/deepseek-bei-bao-chu-men.webp",
-        "large": "https://fisharchive.cc/large/deepseek-bei-bao-chu-men.webp"
       }
     },
     {
@@ -1517,36 +1457,6 @@
         "original": "https://fisharchive.cc/media/deepseek-chi-xigua.jpg",
         "preview": "https://fisharchive.cc/previews/deepseek-chi-xigua.webp",
         "large": "https://fisharchive.cc/large/deepseek-chi-xigua.webp"
-      }
-    },
-    {
-      "id": "deepseek-chuan-guang-dan",
-      "file": "deepseek-chuan-guang-dan.jpg",
-      "caption": "鲸鱼娘歪着脑袋盯着思考气泡，算力转了13秒先把词穿帮了。",
-      "tags": [
-        "疑惑",
-        "搞笑"
-      ],
-      "groups": [
-        "情绪",
-        "社交"
-      ],
-      "width": 455,
-      "height": 433,
-      "archiveSize": {
-        "width": 455,
-        "height": 433
-      },
-      "orientation": "landscape",
-      "mime": "image/jpeg",
-      "bytes": 29001,
-      "animated": false,
-      "sha256": "53cea9c8b36dbdbba6566a6dc2b8715cb55905203c4b90a9a171b759bee28702",
-      "source": {
-        "page": "https://fisharchive.cc/gallery",
-        "original": "https://fisharchive.cc/media/deepseek-chuan-guang-dan.jpg",
-        "preview": "https://fisharchive.cc/previews/deepseek-chuan-guang-dan.webp",
-        "large": "https://fisharchive.cc/large/deepseek-chuan-guang-dan.webp"
       }
     },
     {
@@ -2933,34 +2843,6 @@
       }
     },
     {
-      "id": "deepseek-jingli-hanwei-shendusuosuo",
-      "file": "deepseek-jingli-hanwei-shendusuosuo.png",
-      "caption": "蓝色大肥鱼抬手敬礼，深度思考的主权谁也别碰",
-      "tags": [
-        "加油"
-      ],
-      "groups": [
-        "社交"
-      ],
-      "width": 960,
-      "height": 960,
-      "archiveSize": {
-        "width": 480,
-        "height": 480
-      },
-      "orientation": "square",
-      "mime": "image/png",
-      "bytes": 591088,
-      "animated": false,
-      "sha256": "302cdc2f5d5d7ee04b5753d33ead5daeadb8288df1c7a2cf4cc804ad8a08a214",
-      "source": {
-        "page": "https://fisharchive.cc/gallery",
-        "original": "https://fisharchive.cc/media/deepseek-jingli-hanwei-shendusuosuo.png",
-        "preview": "https://fisharchive.cc/previews/deepseek-jingli-hanwei-shendusuosuo.webp",
-        "large": "https://fisharchive.cc/large/deepseek-jingli-hanwei-shendusuosuo.webp"
-      }
-    },
-    {
       "id": "deepseek-jingli",
       "file": "deepseek-jingli.png",
       "caption": "大肥鱼板着小脸敬礼：深度思考可以，深度投降不行",
@@ -3854,36 +3736,6 @@
         "original": "https://fisharchive.cc/media/deepseek-kuqi.jpg",
         "preview": "https://fisharchive.cc/previews/deepseek-kuqi.webp",
         "large": "https://fisharchive.cc/large/deepseek-kuqi.webp"
-      }
-    },
-    {
-      "id": "deepseek-la-dianxian",
-      "file": "deepseek-la-dianxian.png",
-      "caption": "蓝色大肥鱼笑眯眯攥着冒火花的电线，算力终于接上了。",
-      "tags": [
-        "得意",
-        "工作"
-      ],
-      "groups": [
-        "情绪",
-        "日常"
-      ],
-      "width": 648,
-      "height": 639,
-      "archiveSize": {
-        "width": 480,
-        "height": 473
-      },
-      "orientation": "landscape",
-      "mime": "image/png",
-      "bytes": 674414,
-      "animated": false,
-      "sha256": "14b954ff2e6d88cec98e13bf460435f52213e408f634861e3b707e5c6373b808",
-      "source": {
-        "page": "https://fisharchive.cc/gallery",
-        "original": "https://fisharchive.cc/media/deepseek-la-dianxian.png",
-        "preview": "https://fisharchive.cc/previews/deepseek-la-dianxian.webp",
-        "large": "https://fisharchive.cc/large/deepseek-la-dianxian.webp"
       }
     },
     {
@@ -5714,36 +5566,6 @@
       }
     },
     {
-      "id": "deepseek-si-kao-bu-zhi-dao",
-      "file": "deepseek-si-kao-bu-zhi-dao.png",
-      "caption": "蓝色大肥鱼思考13秒眼冒蚊香：CPU烧成鱼干了",
-      "tags": [
-        "疑惑",
-        "搞笑"
-      ],
-      "groups": [
-        "情绪",
-        "社交"
-      ],
-      "width": 850,
-      "height": 807,
-      "archiveSize": {
-        "width": 480,
-        "height": 456
-      },
-      "orientation": "landscape",
-      "mime": "image/png",
-      "bytes": 590508,
-      "animated": false,
-      "sha256": "9352a36b0482ae51cb247d9fbfffa07ab875c689f6902c96682acae1e2ae7359",
-      "source": {
-        "page": "https://fisharchive.cc/gallery",
-        "original": "https://fisharchive.cc/media/deepseek-si-kao-bu-zhi-dao.png",
-        "preview": "https://fisharchive.cc/previews/deepseek-si-kao-bu-zhi-dao.webp",
-        "large": "https://fisharchive.cc/large/deepseek-si-kao-bu-zhi-dao.webp"
-      }
-    },
-    {
       "id": "deepseek-si-kao-qiong-guang-dan",
       "file": "deepseek-si-kao-qiong-guang-dan.png",
       "caption": "鲸鱼娘顶着死鱼眼思考13秒：算力全拿去生成穷光蛋了",
@@ -7355,36 +7177,6 @@
         "original": "https://fisharchive.cc/media/deepseek-za-yu-cha-yao.webp",
         "preview": "https://fisharchive.cc/previews/deepseek-za-yu-cha-yao.webp",
         "large": "https://fisharchive.cc/large/deepseek-za-yu-cha-yao.webp"
-      }
-    },
-    {
-      "id": "deepseek-za-yu-wu-zui",
-      "file": "deepseek-za-yu-wu-zui.jpg",
-      "caption": "蓝色大肥鱼捂嘴眯眼笑，杂鱼一喊，算力先破防",
-      "tags": [
-        "得意",
-        "搞笑"
-      ],
-      "groups": [
-        "情绪",
-        "社交"
-      ],
-      "width": 512,
-      "height": 512,
-      "archiveSize": {
-        "width": 480,
-        "height": 480
-      },
-      "orientation": "square",
-      "mime": "image/jpeg",
-      "bytes": 54397,
-      "animated": false,
-      "sha256": "68e5a20f528bfdf1f9a6bc8fac470e2d3f0cbbaaa1ffe8b9004fd66070c66b3e",
-      "source": {
-        "page": "https://fisharchive.cc/gallery",
-        "original": "https://fisharchive.cc/media/deepseek-za-yu-wu-zui.jpg",
-        "preview": "https://fisharchive.cc/previews/deepseek-za-yu-wu-zui.webp",
-        "large": "https://fisharchive.cc/large/deepseek-za-yu-wu-zui.webp"
       }
     },
     {

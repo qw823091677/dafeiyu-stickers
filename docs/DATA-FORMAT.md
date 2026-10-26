@@ -13,6 +13,36 @@
 | `original` | 原图绝对 URL（下载源） |
 | `preview` / `large` | WebP 预览 / 大图 URL |
 
+## 梗鲸补充图（在本地收藏库，不在 `data/`）
+
+梗鲸（`https://aigengtu.com/`）的 300 张**不进入档案馆索引**，而是导入到 `collection/`：
+
+- id 为 `gj-<梗鲸编号>`，`source.platform = "aigengtu"`，带 `source.page`（`aigengtu.com/archive#…`）溯源；
+- 标签由导入时按 `data/tags.json` 的标准标签人工/模型标注（梗鲸本身没有标签字段）；
+- 导入来源清单留在 `collection/sources/aigengtu.manifest.json`（本地，不入库）；
+- 授权/作者尚未核实，**不随档案馆索引分发**，再分发前请自行确认。
+
+## `data/excluded.json`
+
+**本地去重排除表**。同一张图在站内被收成多个尺寸/水印版本时（pHash 距离为 0），在这里登记多余的那条：
+
+```jsonc
+{
+  "version": 1,
+  "items": [
+    { "slug": "deepseek-za-yu-wu-zui", "duplicateOf": "deepseek-za-yu-yan-zui", "reason": "同一张「杂鱼♡」：带水印版 vs 干净版" }
+  ]
+}
+```
+
+`loadManifest()` 会过滤掉这些 slug，因此：
+
+- 它们不会进 `data/index.json`，检索不到；
+- `sync` 不会下载它们（即使图片文件已被删掉）；
+- `sync --refresh-manifest` 重新拉取站内清单后，排除依然生效。
+
+排查重复时可以配合 `data/diff-groups.json`（站方的差分组）一起看，但**不能只信 pHash**：同构图同角色的大头像（例如两种相反表情）pHash 也会判为 0，必须逐对看图确认。
+
 ## `data/index.json`
 
 由 `src/index-builder.mjs` 生成，入库便于审阅。顶层：
@@ -20,7 +50,7 @@
 | 字段 | 说明 |
 | --- | --- |
 | `schemaVersion` | 当前为 1 |
-| `source.manifestSha256` | 清单快照的 sha256，用于判断"索引对的是哪一版站点数据" |
+| `source.manifestSha256` | 主清单原文的 sha256，用于判断"索引对的是哪一版数据" |
 | `license` / `attribution` | 许可与署名，逐条对应站点「关于」页 |
 | `stats` | 数量、标签数、动图数、站长自作数（`selfMade`）、总字节、`dataVersion`（清单哈希前 12 位） |
 | `tags` | `{name, count, group}`，按数量倒序 |
@@ -30,8 +60,8 @@
 
 | 字段 | 说明 |
 | --- | --- |
-| `id` | 站点文件名去扩展名，稳定、唯一（271 个） |
-| `file` | 本地文件名（沿用站点原扩展名） |
+| `id` | 档案馆条目为文件名去扩展名，稳定、唯一（当前 264 个）；梗鲸条目在本地收藏库，id 为 `gj-*` |
+| `file` | 本地文件名（按真实图片格式的扩展名） |
 | `caption` | 站点 `alt` 原文 |
 | `selfMade` | 站点 `selfMade`：站长自作（EDMOK），当前 5 张 |
 | `tags` / `groups` | 站点标签 / 标签所属组 |
@@ -64,15 +94,15 @@
 
 ## `collection/index.json`（本地收藏库，不入库）
 
-与档案馆 `data/index.json` **分开**：从 QQ 群聊/私聊收藏的图片单独一份索引。
+与档案馆 `data/index.json` **分开**：QQ 群聊/私聊收藏 + 从梗鲸导入的补充图共用这一份索引。
 
 ```jsonc
 {
   "schemaVersion": 1,
   "kind": "collection",
-  "name": "本地收藏库（QQ 收藏）",
+  "name": "本地收藏库（QQ + 梗鲸）",
   "license": { "name": "CC BY-NC-SA 4.0" },
-  "stats": { "count": 3, "tags": 4, "animated": 0, "totalBytes": 1234567, "updatedAt": "…" },
+  "stats": { "count": 303, "tags": 36, "animated": 4, "totalBytes": 521024865, "updatedAt": "…" },
   "tags": [{ "name": "无语", "count": 2, "group": "情绪" }],
   "stickers": [
     {
@@ -100,9 +130,10 @@
 }
 ```
 
-- 去重：按 `sha256`；档案馆已有的图不会重复收藏；
-- `id` 固定为 `local-<sha256 前 10 位>`，可用 `forget <id>` 删除；
-- `collection/images/` 与 `collection/index.json` 默认不入 Git（含会话/发送者信息）。
+- QQ 收藏按 `sha256` 去重；梗鲸导入按 pHash 与本地库比对后只留新图；
+- `id`：QQ 为 `local-<sha256 前 10 位>`，梗鲸为 `gj-<编号>`，可用 `forget <id>` 删除；
+- `source.platform` 取值 `qq` / `aigengtu` / `file`，决定 `sticker_credit` 的署名来源（梗鲸不是档案馆）；
+- `collection/images/` 与 `collection/index.json` 默认不入 Git（QQ 条目含会话信息）；梗鲸来源清单在 `collection/sources/`。
 
 ## 环境变量
 
